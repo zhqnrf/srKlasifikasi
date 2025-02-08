@@ -29,50 +29,56 @@
                             <h5 class="card-title">Munaqosah Santri</h5>
 
                             <!-- Tabel Riwayat -->
-                        <!-- Tabel Riwayat -->
-                        <table id="dataTable" class="table">
-                            <thead>
-                                <tr>
-                                    <th>Nama Santri</th>
-                                    <th>Tanggal</th>
-                                    <th>Tahun Angkatan</th>
-                                    <th>Al-Qur'an Isi</th>
-                                    <th>Al-Hadis Isi</th>
-                                    <th>Nilai N</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($riwayat as $item)
-                                <tr>
-                                    <!-- Asumsikan Anda punya relasi ke Tabel User untuk nama, jenkel, asal -->
-                                    <td>{{ $item->user->name ?? '—' }}</td>
-                                    <td>{{ $item->created_at->format('Y-m-d') }}</td>
-                                    <td>{{ $item->tahun_angkatan }}</td>
-                                    <td>{{ $item->alquran }}</td>
-                                    <td>{{ $item->alhadis }}</td>
-                                    <td>{{ number_format($item->nilai_n, 2) }}</td>
-                                    <td>{{ $item->status }}</td>
-                                    <td>
-                                        <!-- misal admin bisa verifikasi, dsb. -->
-                                        <a href="#" class="btn btn-success btn-sm">
-                                            <i class='bx bxs-check-circle'></i> Verifikasi
-                                        </a>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                            <table id="dataTable" class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Nama Santri</th>
+                                        <th>Tanggal</th>
+                                        <th>Tahun Angkatan</th>
+                                        <th>Al-Qur'an Isi</th>
+                                        <th>Al-Hadis Isi</th>
+                                        <th>Nilai N</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($riwayat as $item)
+                                    <tr>
+                                        <td>{{ $item->user->name ?? '—' }}</td>
+                                        <td>{{ $item->created_at->format('Y-m-d') }}</td>
+                                        <td>{{ $item->tahun_angkatan }}</td>
+                                        <td>{{ $item->alquran }}</td>
+                                        <td>{{ $item->alhadis }}</td>
+                                        <td>{{ number_format($item->nilai_n, 2) }}</td>
+                                        <td>{{ $item->status }}</td>
+                                        <td>
+                                            <a href="#" class="btn btn-success btn-sm">
+                                                <i class='bx bxs-check-circle'></i> Verifikasi
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
 
                             <!-- DataTables CSS & JS -->
                             <link rel="stylesheet"
                                 href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+                            <!-- Tambahkan CSS Responsive -->
+                            <link rel="stylesheet"
+                                href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css">
+
                             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                             <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+                            <!-- Tambahkan JS Responsive -->
+                            <script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js">
+                            </script>
+
                             <script>
                                 $(document).ready(function () {
                                     $('#dataTable').DataTable({
+                                        responsive: true, // Aktifkan fitur responsif
                                         "language": {
                                             "search": "Cari:",
                                             "lengthMenu": "Tampilkan _MENU_ data",
@@ -90,5 +96,6 @@
                 </div>
             </div>
         </div>
+    </div>
 </main>
 @endsection

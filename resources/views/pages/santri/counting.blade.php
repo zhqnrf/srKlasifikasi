@@ -63,107 +63,109 @@
                 @if($latest)
                 <div class="card-footer text-center p-4">
                     <h5 class="mb-3 fw-bold">Hasil Terakhir</h5>
-                    <table class="table table-bordered text-start">
-                        <tr>
-                            <th><i class="bx bx-calendar"></i> Tanggal</th>
-                            <td>{{ $latest->created_at->format('Y-m-d H:i') }}</td>
-                        </tr>
-                        <tr>
-                            <th><i class="bx bx-user"></i> Tahun Angkatan</th>
-                            <td>{{ $latest->tahun_angkatan }}</td>
-                        </tr>
-                        <tr>
-                            <th><i class="bx bx-book"></i> Jumlah Al-Qur'an Isi</th>
-                            <td>{{ $latest->alquran }}</td>
-                        </tr>
-                        <tr>
-                            <th><i class="bx bx-book-open"></i> Jumlah Al-Hadis Isi</th>
-                            <td>{{ $latest->alhadis }}</td>
-                        </tr>
-                        <tr>
-                            <th><i class="bx bx-line-chart"></i> Nilai (n)</th>
-                            <td>
-                                <strong>
-                                    {{-- Tampilkan 2 desimal + simbol persen --}}
-                                    {{ number_format($latest->nilai_n, 2) }}%
-                                </strong>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th><i class='bx bx-calculator'></i> Hasil</th>
-                            <td>
-                                <span class="badge
-                                        {{ $latest->status === 'Tercapai' ? 'bg-success' : 'bg-danger' }}">
-                                    {{ $latest->status }}
-                                </span>
-                            </td>
-                        </tr>
+                    <!-- Membuat tabel responsif -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-start">
+                            <tr>
+                                <th><i class="bx bx-calendar"></i> Tanggal</th>
+                                <td>{{ $latest->created_at->format('Y-m-d H:i') }}</td>
+                            </tr>
+                            <tr>
+                                <th><i class="bx bx-user"></i> Tahun Angkatan</th>
+                                <td>{{ $latest->tahun_angkatan }}</td>
+                            </tr>
+                            <tr>
+                                <th><i class="bx bx-book"></i> Jumlah Al-Qur'an Isi</th>
+                                <td>{{ $latest->alquran }}</td>
+                            </tr>
+                            <tr>
+                                <th><i class="bx bx-book-open"></i> Jumlah Al-Hadis Isi</th>
+                                <td>{{ $latest->alhadis }}</td>
+                            </tr>
+                            <tr>
+                                <th><i class="bx bx-line-chart"></i> Nilai (n)</th>
+                                <td>
+                                    <strong>
+                                        {{-- Tampilkan 2 desimal + simbol persen --}}
+                                        {{ number_format($latest->nilai_n, 2) }}%
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><i class='bx bx-calculator'></i> Hasil</th>
+                                <td>
+                                    <span class="badge
+                                            {{ $latest->status === 'Tercapai' ? 'bg-success' : 'bg-danger' }}">
+                                        {{ $latest->status }}
+                                    </span>
+                                </td>
+                            </tr>
 
-                        {{-- Tambahan kolom baru untuk keterangan detail --}}
-                        @php
-                            $start = \Carbon\Carbon::create($latest->tahun_angkatan, 1, 1);
-                            $now   = \Carbon\Carbon::today();
-                            $x     = $start->diffInDays($now);
-                            $y     = $latest->alquran + $latest->alhadis;
-                            $targetSpeed = 2603 / 1095;
+                            {{-- Tambahan kolom baru untuk keterangan detail --}}
+                            @php
+                                $start = \Carbon\Carbon::create($latest->tahun_angkatan, 1, 1);
+                                $now   = \Carbon\Carbon::today();
+                                $x     = $start->diffInDays($now);
+                                $y     = $latest->alquran + $latest->alhadis;
+                                $targetSpeed = 2603 / 1095;
 
-                            // nCheck = 0 sebagai default
-                            $nCheck = 0;
+                                // nCheck = 0 sebagai default
+                                $nCheck = 0;
 
-                            if ($y >= 2603) {
-                                // Sudah pasti 'Sesuai Target'
-                                $nCheck = 100;
-                            } elseif ($x > 0) {
-                                $userSpeed = $y / $x;
-                                $nCheck    = ($userSpeed / $targetSpeed) * 100;
-                            }
+                                if ($y >= 2603) {
+                                    // Sudah pasti 'Sesuai Target'
+                                    $nCheck = 100;
+                                } elseif ($x > 0) {
+                                    $userSpeed = $y / $x;
+                                    $nCheck    = ($userSpeed / $targetSpeed) * 100;
+                                }
 
-                            // Tentukan status detail
-                            $detailStatus = '';
-                            $badgeClass   = '';
+                                // Tentukan status detail
+                                $detailStatus = '';
+                                $badgeClass   = '';
 
-                            // 1) Kalau y >= 2603: Sudah penuh => "Sesuai Target"
-                            if ($y >= 2603) {
-                                $detailStatus = "Sesuai Target (Halaman penuh)";
-                                $badgeClass   = 'bg-success';
-                            }
-                            // 2) Kalau x=0 dan y<2603
-                            elseif ($x == 0) {
-                                $detailStatus = "Data belum berjalan (x=0)";
-                                $badgeClass   = 'bg-secondary';
-                            }
-                            else {
-                                // 3) Kalau x>0, cek nCheck
-                                if ($nCheck < 100) {
-                                    // Hitung kekurangan
-                                    $shortPages = ($x * $targetSpeed) - $y;
-                                    $shortPages = ceil($shortPages); 
-                                    $detailStatus = "Belum Target, kurang isi {$shortPages} halaman";
-                                    $badgeClass   = 'bg-danger';
-                                } elseif (abs($nCheck - 100) < 0.00001) {
-                                    // pas 100%
-                                    $detailStatus = "Sesuai Target (100%)";
+                                // 1) Kalau y >= 2603: Sudah penuh => "Sesuai Target"
+                                if ($y >= 2603) {
+                                    $detailStatus = "Sesuai Target (Halaman penuh)";
                                     $badgeClass   = 'bg-success';
-                                } elseif ($nCheck > 100) {
-                                    $detailStatus = "Lebih Target";
-                                    $badgeClass   = 'bg-primary';
-                                } else {
-                                    $detailStatus = "Data tidak valid";
+                                }
+                                // 2) Kalau x=0 dan y<2603
+                                elseif ($x == 0) {
+                                    $detailStatus = "Data belum berjalan (x=0)";
                                     $badgeClass   = 'bg-secondary';
                                 }
-                            }
-                        @endphp
+                                else {
+                                    // 3) Kalau x>0, cek nCheck
+                                    if ($nCheck < 100) {
+                                        // Hitung kekurangan
+                                        $shortPages = ($x * $targetSpeed) - $y;
+                                        $shortPages = ceil($shortPages); 
+                                        $detailStatus = "Belum Target, kurang isi {$shortPages} halaman";
+                                        $badgeClass   = 'bg-danger';
+                                    } elseif (abs($nCheck - 100) < 0.00001) {
+                                        // pas 100%
+                                        $detailStatus = "Sesuai Target (100%)";
+                                        $badgeClass   = 'bg-success';
+                                    } elseif ($nCheck > 100) {
+                                        $detailStatus = "Lebih Target";
+                                        $badgeClass   = 'bg-primary';
+                                    } else {
+                                        $detailStatus = "Data tidak valid";
+                                        $badgeClass   = 'bg-secondary';
+                                    }
+                                }
+                            @endphp
 
-                        <tr>
-                            <th><i class="bx bx-info-circle"></i> Status Detail</th>
-                            <td>
-                                <span class="badge {{ $badgeClass }}">
-                                    {{ $detailStatus }}
-                                </span>
-                            </td>
-                        </tr>
-
-                    </table>
+                            <tr>
+                                <th><i class="bx bx-info-circle"></i> Status Detail</th>
+                                <td>
+                                    <span class="badge {{ $badgeClass }}">
+                                        {{ $detailStatus }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
 
                 {{-- Debug (opsional) --}}
