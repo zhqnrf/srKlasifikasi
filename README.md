@@ -26,8 +26,8 @@ Make sure you have the following installed on your system:
 ### Steps
 1. **Clone the repository**
    ```sh
-   git clone https://github.com/your-repo/sr-klasifikasi.git
-   cd sr-klasifikasi
+   https://github.com/zhqnrf/srKlasifikasi
+   cd srKlasifikasi
    ```
 
 2. **Install dependencies**
