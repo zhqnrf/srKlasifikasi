@@ -7,47 +7,68 @@ use App\Models\Riwayat;
 
 class MunaqosahController extends Controller
 {
-    /**
-     * Hapus data riwayat berdasarkan ID.
-     */
+    // Method untuk menghapus data riwayat (digunakan di admin dan santri)
     public function destroy($id)
     {
-        // Cari data Riwayat
         $riwayat = Riwayat::findOrFail($id);
-
-        // Hapus
         $riwayat->delete();
-
-        // Redirect balik dengan pesan sukses
         return redirect()->back()->with('success', 'Data riwayat berhasil dihapus.');
     }
 
     /**
-     * Kirim data riwayat ke admin (misalnya tandai "is_sent" atau terserah logika Anda).
+     * Kirim data riwayat ke admin yang dipilih.
      */
-    public function send($id)
+    public function send(Request $request, $id)
     {
-        // Cari data Riwayat
-        $riwayat = Riwayat::findOrFail($id);
+        $request->validate([
+            'admin_id' => 'required|exists:users,id', // pastikan admin_id valid
+        ]);
 
-        // Misalnya Anda punya kolom "sent_to_admin" (boolean) atau "sent_at" (datetime) untuk menandai bahwa data sudah dikirim
-        // Contoh: kita set "sent_at" menjadi sekarang
+        $riwayat = Riwayat::findOrFail($id);
+        $riwayat->admin_id = $request->admin_id;
         $riwayat->sent_at = now();
+        $riwayat->munaqosah_status = 'Sedang di Verifikasi';
         $riwayat->save();
 
-        // Redirect balik dengan pesan sukses
         return redirect()->back()->with('success', 'Data berhasil dikirim ke admin.');
     }
 
 
-    // Contoh: Tampilkan semua Riwayat yang "sent_at" != null
-public function showMunaqosah()
-{
-    $riwayat = Riwayat::whereNotNull('sent_at')
-                ->orderBy('created_at', 'desc')
-                ->get();
+    /**
+     * Tampilkan data munaqosah untuk admin.
+     */
+     public function showMunaqosah()
+    {
+        $riwayat = Riwayat::whereNotNull('sent_at')
+        ->where('admin_id', auth()->id()) // hanya data untuk admin yang sedang login
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-    return view('pages.admin.data-santri', compact('riwayat'));
-}
+        return view('pages.admin.data-santri', compact('riwayat'));
+    }
 
+
+    /**
+     * Verifikasi data munaqosah.
+     */
+    public function verify($id)
+    {
+        $riwayat = Riwayat::findOrFail($id);
+        $riwayat->munaqosah_status = 'Terverifikasi';
+        $riwayat->save();
+
+        return redirect()->back()->with('success', 'Data telah diverifikasi.');
+    }
+
+    /**
+     * Tolak data munaqosah.
+     */
+    public function reject($id)
+    {
+        $riwayat = Riwayat::findOrFail($id);
+        $riwayat->munaqosah_status = 'Ditolak';
+        $riwayat->save();
+
+        return redirect()->back()->with('success', 'Data telah ditolak.');
+    }
 }

@@ -39,6 +39,7 @@
                                             <th>Al-Hadis Isi</th>
                                             <th>Nilai N</th>
                                             <th>Status</th>
+                                            <th>Review</th>
                                             <!-- Kolom Aksi -->
                                             <th>Aksi</th>
                                         </tr>
@@ -58,9 +59,19 @@
                                                 <span class="badge bg-danger">{{ $item->status }}</span>
                                                 @endif
                                             </td>
-                                            <!-- Kolom Aksi -->
                                             <td>
-                                                <!-- Tombol Hapus -->
+                                                @if($item->munaqosah_status === 'Terverifikasi')
+                                                <span class="badge bg-success">{{ $item->munaqosah_status }}</span>
+                                                @elseif($item->munaqosah_status === null)
+                                                <span class="badge bg-warning">Belum Diverifikasi</span>
+                                                @else
+                                                <span class="badge bg-info">{{ $item->munaqosah_status }}</span>
+                                                @endif
+                                            </td>
+                                            <!-- Kolom Aksi -->
+                                            <!-- Di dalam tabel, ganti tombol Kirim -->
+                                            <td>
+                                                <!-- Tombol Hapus (tetap) -->
                                                 <form action="{{ route('riwayat.destroy', $item->id) }}" method="POST"
                                                     style="display:inline;">
                                                     @csrf
@@ -71,11 +82,13 @@
                                                     </button>
                                                 </form>
 
-                                                <!-- Tombol Kirim -->
-                                                <a href="{{ route('riwayat.send', $item->id) }}"
-                                                    class="btn btn-primary btn-sm">
+                                                <!-- Tombol Kirim hanya muncul di data terakhir -->
+                                                @if($loop->first)
+                                                <button type="button" class="btn btn-primary btn-sm btn-send"
+                                                    data-id="{{ $item->id }}">
                                                     <i class='bx bxs-send'></i> Kirim
-                                                </a>
+                                                </button>
+                                                @endif
                                             </td>
                                         </tr>
                                         @endforeach
@@ -115,4 +128,45 @@
             </div>
         </div>
 </main>
+
+
+<!-- Modal untuk memilih admin -->
+<div class="modal fade" id="sendModal" tabindex="-1" aria-labelledby="sendModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="sendForm" method="POST" action="">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sendModalLabel">Pilih Wali Kelas</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="admin_id" class="form-label">Admin</label>
+                        <select name="admin_id" id="admin_id" class="form-select" required>
+                            <option value="">Pilih Wali Kelas</option>
+                            @foreach($admins as $admin)
+                            <option value="{{ $admin->id }}" style="color: black">{{ $admin->email }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Kirim</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(document).on('click', '.btn-send', function(){
+         var id = $(this).data('id');
+         // Set action form ke route /santri/riwayat/{id}/send
+         $('#sendForm').attr('action', '/santri/riwayat/' + id + '/send');
+         // Tampilkan modal
+         $('#sendModal').modal('show');
+    });
+</script>
 @endsection

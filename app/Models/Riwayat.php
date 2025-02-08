@@ -19,6 +19,8 @@ class Riwayat extends Model
         'nilai_n',
         'status',
         'sent_at',
+        'admin_id',         
+        'munaqosah_status',  
     ];
 
     /**

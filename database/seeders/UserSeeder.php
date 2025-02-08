@@ -14,16 +14,16 @@ class UserSeeder extends Seeder
         User::create([
             'name' => null, // admin tidak butuh name, boleh dikosongi
             'nis'  => null, // admin tidak butuh NIS
-            'email' => 'admin@example.com',
+            'email' => 'muhammadfirdaus@gmail.com',
             'password' => Hash::make('123456'), // password: 123456
             'role' => 'admin'
         ]);
 
         // Santri account
         User::create([
-            'name' => 'Santri Testing',
-            'nis'  => '12345',
-            'email' => 'santri@example.com',
+            'name' => 'Zhaqian',
+            'nis'  => 'A13411',
+            'email' => 'santri@gmail.com',
             'password' => Hash::make('123456'), // password: 123456
             'role' => 'santri',
             'jenis_kelamin' => 'Laki-laki',

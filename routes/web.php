@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SantriController;
 use App\Http\Controllers\HitungController;
 use App\Http\Controllers\MunaqosahController;
+use App\Http\Controllers\ClassifiactionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -50,6 +51,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/add', [AdminController::class, 'index'])->name('admin.add');
     Route::post('/admin/add', [AdminController::class, 'store'])->name('admin.store');
     Route::delete('/admin/{id}', [AdminController::class, 'destroy'])->name('admin.delete');
+    Route::get('/admin/santri', [AdminController::class, 'showSantri'])->name('santri.add');
+    Route::delete('/admin/santri/{id}', [AdminController::class, 'destroySantri'])->name('santri.delete');
     Route::get('/admin/changePassword', [AdminController::class, 'showChangePassword'])
         ->name('changePassword');
     Route::post('/admin/changePassword', [AdminController::class, 'changePassword'])
@@ -57,8 +60,17 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dataMunqosah', [MunaqosahController::class, 'showMunaqosah'])
         ->name('dataMunaqosah');
     Route::get('/admin/dashboardAdmin', [AdminController::class, 'dashboard'])
-    ->name('dashboardAdmin');
+        ->name('dashboardAdmin');
+    Route::post('/admin/munaqosah/{id}/verify', [MunaqosahController::class, 'verify'])
+        ->name('munaqosah.verify');
+    Route::post('/admin/munaqosah/{id}/reject', [MunaqosahController::class, 'reject'])
+        ->name('munaqosah.reject');
+    Route::delete('/admin/munaqosah/{id}', [MunaqosahController::class, 'destroy'])
+        ->name('munaqosah.destroy');
+    Route::get('/admin/examData', [ClassifiactionController::class, 'examData'])
+        ->name('examData');
+    Route::get('/admin/trainData', [ClassifiactionController::class, 'trainData'])
+        ->name('trainData');
+    Route::get('/admin/classificationResult', [ClassifiactionController::class, 'classificationResult'])
+        ->name('classificationResult');
 });
-
-
-

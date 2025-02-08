@@ -20,6 +20,15 @@ class AdminController extends Controller
         return view('pages.admin.add-admin', compact('admins'));
     }
 
+
+    public function showSantri()
+    {
+        // Ambil semua user yang ber-role admin
+        $santris = User::where('role', 'santri')->get();
+
+        return view('pages.admin.add-santri', compact('santris'));
+    }
+
     public function dashboard()
     {
 
@@ -61,6 +70,15 @@ class AdminController extends Controller
         $admin->delete();
 
         return redirect()->route('admin.add')->with('success', 'Admin berhasil dihapus.');
+    }
+
+
+    public function destroySantri($id)
+    {
+        $admin = User::findOrFail($id);
+        $admin->delete();
+
+        return redirect()->route('santri.add')->with('success', 'Santri berhasil dihapus.');
     }
 
     /**

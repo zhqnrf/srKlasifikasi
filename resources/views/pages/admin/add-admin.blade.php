@@ -22,7 +22,11 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Data Admin</h5>
-
+                            @if(session('success'))
+                                <div class="alert alert-success">
+                                    {{ session('success') }}
+                                </div>
+                                @endif
                             {{-- Tabel Admin --}}
                             <table id="addAdminTable" class="table">
                                 <thead>
@@ -37,16 +41,33 @@
                                     <tr>
                                         <td>{{ $index+1 }}</td>
                                         <td>{{ $admin->email }}</td>
-                                        <td>
-                                            <form action="{{ route('admin.delete', $admin->id) }}" method="POST"
-                                                onsubmit="return confirm('Yakin ingin menghapus admin ini?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button class="btn btn-danger btn-sm" type="submit">
-                                                    <i class='bx bx-trash'></i>
-                                                </button>
-                                            </form>
-                                        </td>
+                                <td>
+                                    <form action="{{ route('admin.delete', $admin->id) }}" method="POST" id="deleteForm{{ $admin->id }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-danger btn-sm" type="button" onclick="confirmDelete({{ $admin->id }})">
+                                            <i class='bx bx-trash'></i>
+                                        </button>
+                                    </form>
+                                </td>
+                                
+                                <script>
+                                    function confirmDelete(adminId) {
+                                        Swal.fire({
+                                            title: 'Yakin ingin menghapus admin ini?',
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#d33',
+                                            cancelButtonColor: '#3085d6',
+                                            confirmButtonText: 'Ya, hapus!',
+                                            cancelButtonText: 'Batal'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                document.getElementById('deleteForm' + adminId).submit();
+                                            }
+                                        });
+                                    }
+                                </script>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -56,6 +77,9 @@
                                 href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
                             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                             <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+                            <!-- SweetAlert2 CSS & JS -->
+                            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
+                            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
                             <script>
                                 $(document).ready(function () {
                                     $('#addAdminTable').DataTable({

@@ -40,31 +40,36 @@
         </div><!-- End Page Title -->
 
         <!-- Munaqosah Card -->
-<div class="col-12">
-    <div class="card info-card verification-card">
-        <div class="card-body">
-            <h5 class="card-title">Munaqosah <span>| Status</span></h5>
-            <div class="d-flex align-items-center">
-                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                    <i class='bx bx-shield'></i> <!-- Tambahkan ikon -->
-                </div>
-                <div class="ps-3">
-                @if($latestRiwayat)
-                @if($latestRiwayat->munaqosah_status === 'ditolak')
-                <h6 class="text-danger">Munaqosah ditolak</h6>
-                @elseif($latestRiwayat->munaqosah_status === 'verified')
-                <h6 class="text-success">Terverifikasi</h6>
-                @else
-                <h6 class="text-danger">Belum/Tidak Terverifikasi</h6>
-                @endif
-                @else
-                <h6>Belum ada data</h6>
-                @endif
+        <div class="col-12">
+            <div class="card info-card verification-card">
+                <div class="card-body">
+                    <h5 class="card-title">Munaqosah <span>| Status</span></h5>
+                    <div class="d-flex align-items-center">
+                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <i class='bx bx-shield'></i>
+                        </div>
+                        <div class="ps-3">
+                            @if($latestRiwayat)
+                            @if($latestRiwayat->munaqosah_status === 'Ditolak')
+                            <h6 class="text-danger">Ditolak</h6>
+                            @elseif($latestRiwayat->munaqosah_status === 'Terverifikasi')
+                            <h6 class="text-success">Terverifikasi</h6>
+                            <button class="btn btn-primary mt-2" onclick="generateQRCode()">Tampilkan QR</button>
+                            <div id="qrcode" class="mt-3"></div>
+                            <a id="downloadQR" class="btn btn-success mt-2 d-none" download="qrcode.pdf">Unduh PDF</a>
+                            @else
+                            <h6 class="text-warning">Belum Diverifikasi</h6>
+                            @endif
+                            @else
+                            <h6>Belum ada data</h6>
+                            @endif
+                        </div>
+
+                        
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
         <!-- End Munaqosah Card -->
 
         <div class="col-12 dashboard">
@@ -196,5 +201,65 @@
     }
     setInterval(updateTime, 1000);
     updateTime();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+    function generateQRCode() {
+        // Menggunakan operator ternary untuk menghindari error jika $latestRiwayat null
+        const data = `Nama: {{ $user->name }}
+NIS: {{ $user->nis }}
+Status: {{ $latestRiwayat ? $latestRiwayat->status : 'Tidak Tersedia' }}
+Tanggal: {{ now()->format('d-m-Y') }}`;
+        
+        let qr = new QRious({
+            element: document.createElement('canvas'),
+            value: data,
+            size: 200
+        });
+
+        // Menampilkan QR Code
+        document.getElementById('qrcode').innerHTML = '';
+        document.getElementById('qrcode').appendChild(qr.canvas);
+
+        // Menampilkan tombol download
+        const link = document.getElementById('downloadQR');
+        link.classList.remove('d-none');
+
+        // Menambahkan event untuk mengunduh PDF
+        link.onclick = function () {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Menentukan font dan ukuran font
+            doc.setFont("helvetica");
+            doc.setFontSize(12);
+
+            // Menambahkan judul PDF dengan font tebal
+            doc.setFont("helvetica", "bold");
+            doc.text("QR Code Munaqosah", 20, 20);
+
+            // Menambahkan teks dengan font normal
+            doc.setFont("helvetica", "normal");
+
+            let y = 30; // Posisi Y dimulai dari sini
+            doc.text(`Nama: {{ $user->name }}`, 20, y);
+            y += 10;
+            doc.text(`NIS: {{ $user->nis }}`, 20, y);
+            y += 10;
+            doc.text(`Status: {{ $latestRiwayat ? $latestRiwayat->status : 'Tidak Tersedia' }}`, 20, y);
+            y += 10;
+            doc.text(`Tanggal: {{ now()->format('d-m-Y') }}`, 20, y);
+
+            // Memberi jarak antara teks dan QR Code
+            y += 20;
+
+            // Menambahkan QR Code ke PDF
+            doc.addImage(qr.canvas.toDataURL('image/png'), 'PNG', 20, y, 160, 160);
+
+            // Menyimpan file PDF dengan nama qrcode.pdf
+            doc.save("qrcode.pdf");
+        };
+    }
 </script>
 @endsection

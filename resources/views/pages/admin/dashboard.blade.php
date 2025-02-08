@@ -17,11 +17,221 @@
         <div class="col-12 dashboard">
             <div class="row">
                 @if(session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+                @endif
+                <div class="col-12 dashboard">
+                    <div class="row">
+                        <div class="col-xxl-6 col-md-6">
+                            <div class="card info-card sales-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Santri <span>| Jumlah</span></h5>
+                                    <div class="d-flex align-items-center">
+                                        <div
+                                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class='bx bx-universal-access'></i>
+                                        </div>
+                                        <div class="ps-3">
+                                            <h6>400</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-md-6 mb-3">
+                            <div class="card info-card revenue-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Lulusan <span>| Jumlah</span></h5>
+                                    <div class="d-flex align-items-center">
+                                        <div
+                                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class='bx bx-child'></i>
+                                        </div>
+                                        <div class="ps-3">
+                                            <h6>400</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body pb-0">
+                                    <h5 class="card-title">Klasifikasi</h5>
+
+                                    <div id="trafficChart" style="min-height: 400px;" class="echart"></div>
+
+                                    <script>
+                                        document.addEventListener("DOMContentLoaded", () => {
+                                              echarts.init(document.querySelector("#trafficChart")).setOption({
+                                                tooltip: {
+                                                  trigger: 'item'
+                                                },
+                                                legend: {
+                                                  top: '5%',
+                                                  left: 'center'
+                                                },
+                                                series: [{
+                                                  name: 'Access From',
+                                                  type: 'pie',
+                                                  radius: ['40%', '70%'],
+                                                  avoidLabelOverlap: false,
+                                                  label: {
+                                                    show: false,
+                                                    position: 'center'
+                                                  },
+                                                  emphasis: {
+                                                    label: {
+                                                      show: true,
+                                                      fontSize: '18',
+                                                      fontWeight: 'bold'
+                                                    }
+                                                  },
+                                                  labelLine: {
+                                                    show: false
+                                                  },
+                                                  data: [{
+                                                      value: 1048,
+                                                      name: 'Tepat Waktu'
+                                                    },
+                                                    {
+                                                      value: 735,
+                                                      name: 'Terlambat'
+                                                    },
+                                                  ]
+                                                }]
+                                              });
+                                            });
+                                    </script>
+
+                                </div>
+                            </div><!-- End Website Traffic -->
+                        </div>
+
+                        <div class="col-xxl-6 col-md-6 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title justify-content-center d-flex">Jenis Kelamin</h5>
+                                    <div id="jenisKelamin"></div>
+                                </div>
+                            </div>
+                            <script>
+                                document.addEventListener("DOMContentLoaded", () => {
+                                                          new ApexCharts(document.querySelector("#jenisKelamin"), {
+                                                            series: [{
+                                                              name: 'Laki Laki',
+                                                              data: [21,22,23,24,25],
+                                                            }, {
+                                                              name: 'Perempuan',
+                                                              data: [11, 32, 45,32, 41]
+                                                            }],
+                                                            chart: {
+                                                              height: 350,
+                                                              type: 'area',
+                                                              toolbar: {
+                                                                show: false
+                                                              },
+                                                            },
+                                                            markers: {
+                                                              size: 4
+                                                            },
+                                                            colors: ['#4154f1', '#2eca6a'],
+                                                            fill: {
+                                                              type: "gradient",
+                                                              gradient: {
+                                                                shadeIntensity: 1,
+                                                                opacityFrom: 0.3,
+                                                                opacityTo: 0.4,
+                                                                stops: [0, 90, 100]
+                                                              }
+                                                            },
+                                                            dataLabels: {
+                                                              enabled: false
+                                                            },
+                                                            stroke: {
+                                                              curve: 'smooth',
+                                                              width: 2
+                                                            },
+                                                            xaxis: {
+                                                              type: 'year',
+                                                              categories: ["2021","2022", "2023", "2024", "2025"
+                                                              ]
+                                                            },
+                                                            tooltip: {
+                                                              x: {
+                                                                format: 'dd/MM/yy HH:mm'
+                                                              },
+                                                            }
+                                                          }).render();
+                                                        });
+                            </script>
+                            <!-- End Line Chart -->
+
+                        </div>
+                        <div class="col-xxl-6 col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title justify-content-center d-flex">Asal Daerah</h5>
+                                    <div id="asalDaerah"></div>
+                                </div>
+                            </div>
+                            <script>
+                                document.addEventListener("DOMContentLoaded", () => 
+                                        {
+                                            new ApexCharts(document.querySelector("#asalDaerah"), {
+                                            series: [{
+                                                name: 'Luar Jawa',
+                                                data: [21,22,23,24,25],
+                                            }, {
+                                                name: 'Jawa',
+                                                data: [11, 32, 45,32, 41]
+                                            }],
+                                            chart: {
+                                                height: 350,
+                                                type: 'area',
+                                                toolbar: {
+                                                show: false
+                                                },
+                                            },
+                                            markers: {
+                                                size: 4
+                                            },
+                                            colors: ['#F14141FF', '#C72ECAFF'],
+                                            fill: {
+                                                type: "gradient",
+                                                gradient: {
+                                                shadeIntensity: 1,
+                                                opacityFrom: 0.3,
+                                                opacityTo: 0.4,
+                                                stops: [0, 90, 100]
+                                                }
+                                            },
+                                            dataLabels: {
+                                                enabled: false
+                                            },
+                                            stroke: {
+                                                curve: 'smooth',
+                                                width: 2
+                                            },
+                                            xaxis: {
+                                                type: 'year',
+                                                categories: ["2021","2022", "2023", "2024", "2025"
+                                                ]
+                                            },
+                                            tooltip: {
+                                                x: {
+                                                format: 'dd/MM/yy HH:mm'
+                                                },
+                                            }
+                                            }).render();
+                                        });
+                            </script>
+
+                        </div>
                     </div>
-                    @endif
-                <!-- Waktu Card -->
+                </div>
                 <div class="col-xxl-12 col-md-12">
                     <div class="row">
                         <!-- Card Tanggal -->
