@@ -7,6 +7,7 @@ use App\Http\Controllers\SantriController;
 use App\Http\Controllers\HitungController;
 use App\Http\Controllers\MunaqosahController;
 use App\Http\Controllers\ClassificationController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TestDataController;
 
 /*
@@ -61,14 +62,13 @@ Route::middleware(['auth', 'admin'])->group(function () {
         ->name('changePassword.post');
     Route::get('/admin/dataMunqosah', [MunaqosahController::class, 'showMunaqosah'])
         ->name('dataMunaqosah');
-    Route::get('/admin/dashboardAdmin', [AdminController::class, 'dashboard'])
-        ->name('dashboardAdmin');
     Route::post('/admin/munaqosah/{id}/verify', [MunaqosahController::class, 'verify'])
         ->name('munaqosah.verify');
     Route::post('/admin/munaqosah/{id}/reject', [MunaqosahController::class, 'reject'])
         ->name('munaqosah.reject');
     Route::delete('/admin/munaqosah/{id}', [MunaqosahController::class, 'destroy'])
         ->name('munaqosah.destroy');
+    Route::get('/admin/dashboard', [DashboardController::class, 'showDashboard'])->name('admin.dashboard');
 
     // Train Data...........................    
     Route::post('/admin/trainData/import', [ClassificationController::class, 'importExcel'])->name('trainData.import');
@@ -87,7 +87,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Exam Data...........................
     Route::get('/admin/testData', [TestDataController::class, 'showTestData'])->name('testData.show');
     Route::post('/admin/testData/classify', [TestDataController::class, 'classifyData'])->name('testData.classify');
+    Route::post('/admin/testData/deleteAll', [TestDataController::class, 'deleteAllTestData'])->name('testData.deleteAll');
+    Route::post('/admin/testData/reset', [TestDataController::class, 'resetData'])->name('testData.reset');
     // Classification Data...........................
-    Route::get('/admin/classificationResult', [ClassificationController::class, 'classificationResult'])
+    Route::get('/admin/classificationResult', [TestDataController::class, 'showClassify'])
         ->name('classificationResult');
 });

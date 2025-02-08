@@ -6,8 +6,8 @@
         <li class="nav-heading">Menu</li>
 
         <li class="nav-item">
-            <a class="nav-link {{ Route::is('dashboardAdmin') ? '' : 'collapsed' }}"
-                href="{{ route('dashboardAdmin') }}">
+            <a class="nav-link {{ Route::is(patterns: 'admin.dashboard') ? '' : 'collapsed' }}"
+                href="{{ route('admin.dashboard') }}">
                 <i class="bi bi-grid"></i>
                 <span>Dashboard</span>
             </a>

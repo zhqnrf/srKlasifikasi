@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Imports\SantrisImport;
 use App\Exports\SantrisExport;
 use App\Models\Riwayat;
+use App\Models\TestData;
 use App\Models\TrainData;
 use Maatwebsite\Excel\Facades\Excel;
 

@@ -6,7 +6,8 @@
     <div class="row">
         <div class="pagetitle d-flex justify-content-between align-items-center">
             <h1>Tambah Admin</h1>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahAdminModal">Tambah
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahAdminModal"> <i
+                    class='bx bx-user-plus'></i> Tambah
                 Admin</button>
         </div>
         <nav>

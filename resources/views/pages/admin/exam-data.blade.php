@@ -115,21 +115,32 @@
 
         <!-- Pilih Persentase Data Uji -->
         <div class="col-lg-12">
-            <div class="card">
+            <div class="card shadow-sm border-0">
                 <div class="card-body">
-                    <h5 class="card-title">Jumlah Data</h5>
-                    <form action="{{ route('testData.show') }}" method="GET" class="d-flex justify-content-between">
-                        <div class="col-md-4">
-                            <select name="percentage" class="form-select">
-                                <option value="100" {{ request('percentage')==100 ? 'selected' : '' }}>100%</option>
-                                <option value="75" {{ request('percentage')==75 ? 'selected' : '' }}>75%</option>
-                                <option value="50" {{ request('percentage')==50 ? 'selected' : '' }}>50%</option>
-                                <option value="25" {{ request('percentage')==25 ? 'selected' : '' }}>25%</option>
-                            </select>
+                    <h5 class="card-title mb-3">Jumlah Data</h5>
+                    <div class="row g-2">
+                        <div class="col-md-10">
+                            <form action="{{ route('testData.show') }}" method="GET" class="d-flex gap-2">
+                                <select name="percentage" class="form-select">
+                                    <option value="100" {{ request('percentage')==100 ? 'selected' : '' }}>100%</option>
+                                    <option value="75" {{ request('percentage')==75 ? 'selected' : '' }}>75%</option>
+                                    <option value="50" {{ request('percentage')==50 ? 'selected' : '' }}>50%</option>
+                                    <option value="25" {{ request('percentage')==25 ? 'selected' : '' }}>25%</option>
+                                </select>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bx bxs-mouse-alt me-1"></i> Terapkan
+                                </button>
+                            </form>
                         </div>
-                        <button type="submit" class="btn btn-primary"> <i class='bx bxs-mouse-alt'></i>
-                            Terapkan</button>
-                    </form>
+                        <div class="col-md-2">
+                            <form action="{{ route('testData.reset') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-danger w-100">
+                                    <i class="bx bx-reset me-1"></i> <br> Reset Data
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -214,34 +225,32 @@
 
         <div class="container my-5">
             <div class="row">
-                <!-- Card Tepat Waktu -->
+                <!-- Probabilitas Berdasarkan Asal Daerah -->
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header bg-info text-white">
-                            <h5 class="align-items-center d-flex fw-bold" style="margin-bottom: 0rem"><i
-                                    class="bx bx-map-pin me-2" style="font-size: 30px"></i> Asal
-                                Daerah
+                            <h5 class="align-items-center d-flex fw-bold"><i class="bx bx-map-pin me-2"></i> Asal Daerah
                             </h5>
                         </div>
                         <div class="card-body">
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Kategori</th>
-                                        <th scope="col">Jumlah</th>
-
+                                        <th>Kategori</th>
+                                        <th>Jumlah</th>
+                                        <th>Peluang Tepat Waktu</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>Dalam Provinsi</td>
                                         <td>{{ number_format($probRegion['Dalam Provinsi'] ?? 0, 2) }}%</td>
-
+                                        <td>{{ number_format($peluangRegion['Dalam Provinsi'] ?? 0, 2) }}%</td>
                                     </tr>
                                     <tr>
                                         <td>Luar Provinsi</td>
                                         <td>{{ number_format($probRegion['Luar Provinsi'] ?? 0, 2) }}%</td>
-
+                                        <td>{{ number_format($peluangRegion['Luar Provinsi'] ?? 0, 2) }}%</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -249,11 +258,11 @@
                     </div>
                 </div>
 
+                <!-- Probabilitas Berdasarkan Jenis Kelamin -->
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header bg-secondary text-white">
-                            <h5 class="align-items-center d-flex fw-bold" style="margin-bottom: 0rem"><i
-                                    class="bx bxs-user-badge me-2" style="font-size: 30px"></i> Jenis
+                            <h5 class="align-items-center d-flex fw-bold"><i class="bx bxs-user-badge me-2"></i> Jenis
                                 Kelamin
                             </h5>
                         </div>
@@ -261,21 +270,21 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Kategori</th>
-                                        <th scope="col">Jumlah</th>
-
+                                        <th>Kategori</th>
+                                        <th>Jumlah</th>
+                                        <th>Peluang Tepat Waktu</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>Laki Laki</td>
                                         <td>{{ number_format($probGender['Laki-laki'] ?? 0, 2) }}%</td>
-
+                                        <td>{{ number_format($peluangGender['Laki-laki'] ?? 0, 2) }}%</td>
                                     </tr>
                                     <tr>
                                         <td>Perempuan</td>
                                         <td>{{ number_format($probGender['Perempuan'] ?? 0, 2) }}%</td>
-
+                                        <td>{{ number_format($peluangGender['Perempuan'] ?? 0, 2) }}%</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -289,7 +298,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Hasil Klasifikasi</h5>
+                    <h5 class="card-title">Hasil Uji</h5>
                     <div class="table-responsive">
                         <table class="dataTable">
                             <thead>
@@ -349,23 +358,6 @@
                 "infoFiltered": "(disaring dari _MAX_ total data)"
             }
         });
-    });
-</script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        let testData = @json($testData);
-        let totalTestData = "{{ $totalTestData }}";
-        let accuracy = "{{ number_format($accuracy, 2) }}";
-        let probStatus = @json($probStatus);
-        let probGender = @json($probGender);
-        let probRegion = @json($probRegion);
-
-        alert("DEBUG DATA: \n" + 
-              "Total Test Data: " + totalTestData + "\n" +
-              "Accuracy: " + accuracy + "%\n" +
-              "Prob Status: " + JSON.stringify(probStatus) + "\n" +
-              "Prob Gender: " + JSON.stringify(probGender) + "\n" +
-              "Prob Region: " + JSON.stringify(probRegion) + "\n");
     });
 </script>
 @endsection

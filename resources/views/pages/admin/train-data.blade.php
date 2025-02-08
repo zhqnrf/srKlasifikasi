@@ -15,30 +15,37 @@
         </nav>
 
         <div class="col-lg-12">
-            <div class="card">
+            <div class="card shadow-sm border-0">
                 <div class="card-body">
-                    <h5 class="card-title">Tindakan</h5>
-                    <div class="d-flex gap-2 align-items-center">
-                        <form action="{{ route('trainData.import') }}" method="POST" enctype="multipart/form-data"
-                            class="d-flex gap-2 flex-grow-1">
-                            @csrf
-                            <div class="input-group">
-                                <input type="file" name="file" class="form-control" required>
-                                <button type="submit" class="btn btn-primary d-flex gap-1">
-                                    <i class="bx bxs-file-import"></i> Import
+                    <h5 class="card-title mb-3">Tindakan</h5>
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <form action="{{ route('trainData.import') }}" method="POST" enctype="multipart/form-data"
+                                class="d-flex gap-2">
+                                @csrf
+                                <div class="input-group">
+                                    <input type="file" name="file" class="form-control" required>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bx bxs-file-import"></i> Import
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{{ route('trainData.export') }}"
+                                class="btn btn-success w-100 d-flex align-items-center justify-content-center gap-1">
+                                <i class="bx bxs-file-export"></i> Export
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <form action="{{ route('trainData.reset') }}" method="POST" class="reset-form">
+                                @csrf
+                                <button type="button"
+                                    class="btn btn-warning w-100 d-flex align-items-center justify-content-center gap-1 btn-reset">
+                                    <i class="bx bx-reset"></i> Reset Data
                                 </button>
-                            </div>
-                        </form>
-                        <a href="{{ route('trainData.export') }}" class="btn btn-success d-flex gap-1"
-                            style="margin-block-end: 1em">
-                            <i class="bx bxs-file-export"></i> Export
-                        </a>
-                        <form action="{{ route('trainData.reset') }}" method="POST" class="d-inline reset-form">
-                            @csrf
-                            <button type="button" class="btn btn-warning d-flex gap-1 btn-reset">
-                                <i class="bx bx-reset"></i> Reset Data
-                            </button>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
