@@ -62,7 +62,7 @@
                                             <form action="{{ route('munaqosah.verify', $item->id) }}" method="POST"
                                                 style="display:inline;">
                                                 @csrf
-                                                <button type="submit" class="btn btn-success btn-sm">
+                                                <button type="submit" class="mb-1 btn btn-success btn-sm">
                                                     <i class='bx bxs-check-circle'></i> Verifikasi
                                                 </button>
                                             </form>
@@ -71,13 +71,14 @@
                                             <form action="{{ route('munaqosah.reject', $item->id) }}" method="POST"
                                                 style="display:inline;">
                                                 @csrf
-                                                <button type="submit" class="btn btn-warning btn-sm">
+                                                <button type="submit" class="mb-1 btn btn-warning btn-sm">
                                                     <i class='bx bxs-x-circle'></i> Tolak
                                                 </button>
                                             </form>
 
                                             <!-- Tombol Delete dengan SweetAlert -->
-                                            <button class="btn btn-danger btn-sm btn-delete" data-id="{{ $item->id }}">
+                                            <button class="mb-1 btn btn-danger btn-sm btn-delete"
+                                                data-id="{{ $item->id }}">
                                                 <i class='bx bxs-trash'></i> Delete
                                             </button>
                                             @else

@@ -43,12 +43,11 @@ class ClassificationController extends Controller
     public function deleteTrainData($id)
     {
         TrainData::findOrFail($id)->delete();
-        return response()->json(['success' => 'Data berhasil dihapus dari tampilan halaman ini.']);
+        return response()->json(['success' => 'Data berhasil dihapus.']);
     }
 
     public function resetTrainData()
     {
-        // Hapus semua data train_data
         TrainData::truncate();
 
         // Ambil data dari riwayats dan simpan ke train_data
@@ -82,5 +81,15 @@ class ClassificationController extends Controller
         // Misalnya, menjalankan algoritma atau mengambil data dari model
 
         return view('pages.admin.class-result'); // Pastikan view ini telah dibuat
+    }
+
+
+
+    public function showExamData()
+    {
+        // Tambahkan logika untuk mengolah dan menampilkan hasil klasifikasi
+        // Misalnya, menjalankan algoritma atau mengambil data dari model
+
+        return view('pages.admin.exam-data'); // Pastikan view ini telah dibuat
     }
 }

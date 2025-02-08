@@ -46,7 +46,7 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link {{ Route::is('examData') ? '' : 'collapsed' }}" href="{{ route('examData') }}">
+            <a class="nav-link {{ Route::is('examData.show') ? '' : 'collapsed' }}" href="{{ route('examData.show') }}">
                 <i class='bx bx-test-tube'></i>
                 <span>Data Uji</span>
             </a>

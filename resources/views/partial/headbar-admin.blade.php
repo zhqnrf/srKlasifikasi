@@ -24,7 +24,7 @@ $user = Auth::user();
                 <i class="bi bi-info-circle mx-2 text-primary info-icon" style="font-size: 24px; cursor: pointer;"></i>
 
                 <!-- Card Info (Hidden by default) -->
-                <div class="info-card">
+                <div class="card-target">
                     <div class="card shadow">
                         <div class="card-body">
                             <h6 class="card-title text-center">📜 Info Target</h6>
@@ -85,7 +85,7 @@ $user = Auth::user();
 
 <!-- CSS Styling -->
 <style>
-    .info-card {
+    .card-target {
         position: absolute;
         top: 50px;
         right: 70px;
@@ -94,7 +94,7 @@ $user = Auth::user();
         width: 220px;
     }
 
-    .info-card .card {
+    .card-target .card {
         border-radius: 10px;
         transition: all 0.3s ease;
     }
@@ -104,7 +104,7 @@ $user = Auth::user();
 <script>
     document.addEventListener("DOMContentLoaded", function() {
     const infoIcon = document.querySelector(".info-icon");
-    const infoCard = document.querySelector(".info-card");
+    const infoCard = document.querySelector(".card-target");
 
     infoIcon.addEventListener("click", function() {
         if (infoCard.style.display === "none" || infoCard.style.display === "") {

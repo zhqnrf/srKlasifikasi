@@ -67,6 +67,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
         ->name('munaqosah.reject');
     Route::delete('/admin/munaqosah/{id}', [MunaqosahController::class, 'destroy'])
         ->name('munaqosah.destroy');
+
+    // Train Data...........................    
     Route::post('/admin/trainData/import', [ClassificationController::class, 'importExcel'])->name('trainData.import');
     Route::get(
         '/admin/trainData/export',
@@ -76,12 +78,14 @@ Route::middleware(['auth', 'admin'])->group(function () {
         '/admin/trainData',
         [ClassificationController::class, 'showTrainData']
     )->name('trainData.show');
-    Route::get('/admin/examData', [ClassificationController::class, 'examData'])
-        ->name('examData');
-    Route::get('/admin/classificationResult', [ClassificationController::class, 'classificationResult'])
-        ->name('classificationResult');
     Route::delete('/admin/trainData/{id}', [ClassificationController::class, 'deleteTrainData'])
         ->name('trainData.delete');
     Route::post('/admin/trainData/reset', [ClassificationController::class, 'resetTrainData'])
         ->name('trainData.reset');
+    // Exam Data...........................
+    Route::get('/admin/examData', [ClassificationController::class, 'showExamData'])
+        ->name('examData.show');
+    // Classification Data...........................
+    Route::get('/admin/classificationResult', [ClassificationController::class, 'classificationResult'])
+        ->name('classificationResult');
 });
