@@ -7,6 +7,8 @@ use App\Http\Controllers\SantriController;
 use App\Http\Controllers\HitungController;
 use App\Http\Controllers\MunaqosahController;
 use App\Http\Controllers\ClassificationController;
+use App\Http\Controllers\TestDataController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -83,8 +85,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/trainData/reset', [ClassificationController::class, 'resetTrainData'])
         ->name('trainData.reset');
     // Exam Data...........................
-    Route::get('/admin/examData', [ClassificationController::class, 'showExamData'])
-        ->name('examData.show');
+    Route::get('/admin/testData', [TestDataController::class, 'showTestData'])->name('testData.show');
+    Route::post('/admin/testData/classify', [TestDataController::class, 'classifyData'])->name('testData.classify');
     // Classification Data...........................
     Route::get('/admin/classificationResult', [ClassificationController::class, 'classificationResult'])
         ->name('classificationResult');

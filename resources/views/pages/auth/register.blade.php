@@ -77,8 +77,8 @@
                                 <label for="asalDaerah" class="form-label">Asal Daerah</label>
                                 <select class="form-select" name="asal_daerah" id="asalDaerah" required>
                                     <option value="" selected disabled>Pilih Asal Daerah</option>
-                                    <option value="Jawa">Jawa</option>
-                                    <option value="luarJawa">Luar Jawa</option>
+                                    <option value="dalamProvinsi">Dalam Provinsi</option>
+                                    <option value="luarProvinsi">Luar Provinsi</option>
                                 </select>
                                 <div class="invalid-feedback">Pilih Asal Daerah Anda</div>
                             </div>

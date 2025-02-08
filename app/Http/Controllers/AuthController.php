@@ -83,7 +83,7 @@ class AuthController extends Controller
             'email'          => 'required|email|unique:users,email',
             'password'       => 'required|min:6',
             'jenis_kelamin'  => 'required|in:Laki-laki,Perempuan',
-            'asal_daerah'    => 'required|in:Jawa,luarJawa',
+            'asal_daerah'    => 'required|in:dalamProvinsi,luarProvinsi',
         ]);
 
         // Buat user baru dengan role "santri"

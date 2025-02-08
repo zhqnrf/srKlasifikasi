@@ -182,10 +182,10 @@
                                         {
                                             new ApexCharts(document.querySelector("#asalDaerah"), {
                                             series: [{
-                                                name: 'Luar Jawa',
+                                                name: 'Dalam Provinsi',
                                                 data: [21,22,23,24,25],
                                             }, {
-                                                name: 'Jawa',
+                                                name: 'Luar Provinsi',
                                                 data: [11, 32, 45,32, 41]
                                             }],
                                             chart: {

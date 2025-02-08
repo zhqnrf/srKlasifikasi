@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('123456'), // password: 123456
             'role' => 'santri',
             'jenis_kelamin' => 'Laki-laki',
-            'asal_daerah' => 'Jawa',
+            'asal_daerah' => 'dalamProvinsi',
         ]);
     }
 }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('password');
             $table->enum('role', ['admin', 'santri'])->default('santri');
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan'])->nullable();
-            $table->enum('asal_daerah', ['Jawa', 'luarJawa'])->nullable();
+            $table->enum('asal_daerah', ['dalamProvinsi', 'luarProvinsi'])->nullable();
             $table->timestamps();
         });
     }
