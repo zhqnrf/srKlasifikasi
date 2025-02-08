@@ -8,7 +8,6 @@ $user = Auth::user();
 @endphp
 
 <header id="header" class="header fixed-top d-flex align-items-center">
-
     <div class="d-flex align-items-center justify-content-between">
         <a href="#" class="logo d-flex align-items-center">
             <img src="{{ asset('img/logo.png') }}" alt="">
@@ -19,8 +18,33 @@ $user = Auth::user();
 
     <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
-            <li class="nav-item dropdown pe-3">
+            <li class="nav-item dropdown pe-3 d-flex align-items-center">
 
+                <!-- Ikon Info -->
+                <i class="bi bi-info-circle mx-2 text-primary info-icon" style="font-size: 24px; cursor: pointer;"></i>
+
+                <!-- Card Info (Hidden by default) -->
+                <div class="info-card">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h6 class="card-title text-center">📜 Info Target</h6>
+                            <table class="table table-bordered text-center mb-0">
+                                <tbody>
+                                    <tr>
+                                        <td><i class="bi bi-book text-success"></i> <b>Quran</b></td>
+                                        <td>606 Halaman</td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="bi bi-book-half text-warning"></i> <b>Hadis</b></td>
+                                        <td>1997 Halaman</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Icon -->
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                     <i class='bx bxs-user-circle' style="font-size: 40px; color: #0d6efd;"></i>
                     <span class="d-none d-md-block dropdown-toggle ps-2"></span>
@@ -28,7 +52,6 @@ $user = Auth::user();
 
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                     <li class="dropdown-header">
-                        <!-- Tampilkan role & email user yang sedang login -->
                         <h6>{{ $user ? ucfirst($user->role) : 'Guest' }}</h6>
                         <span>{{ $user ? $user->email : 'No Email' }}</span>
                     </li>
@@ -53,10 +76,49 @@ $user = Auth::user();
                             <span>Sign Out</span>
                         </a>
                     </li>
-
                 </ul><!-- End Profile Dropdown Items -->
             </li><!-- End Profile Nav -->
         </ul>
     </nav><!-- End Icons Navigation -->
 
 </header><!-- End Header -->
+
+<!-- CSS Styling -->
+<style>
+    .info-card {
+        position: absolute;
+        top: 50px;
+        right: 70px;
+        display: none;
+        z-index: 999;
+        width: 220px;
+    }
+
+    .info-card .card {
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+</style>
+
+<!-- JavaScript -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const infoIcon = document.querySelector(".info-icon");
+    const infoCard = document.querySelector(".info-card");
+
+    infoIcon.addEventListener("click", function() {
+        if (infoCard.style.display === "none" || infoCard.style.display === "") {
+            infoCard.style.display = "block";
+        } else {
+            infoCard.style.display = "none";
+        }
+    });
+
+    // Klik di luar card untuk menutup
+    document.addEventListener("click", function(event) {
+        if (!infoIcon.contains(event.target) && !infoCard.contains(event.target)) {
+            infoCard.style.display = "none";
+        }
+    });
+});
+</script>

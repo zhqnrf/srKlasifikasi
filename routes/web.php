@@ -6,7 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SantriController;
 use App\Http\Controllers\HitungController;
 use App\Http\Controllers\MunaqosahController;
-use App\Http\Controllers\ClassifiactionController;
+use App\Http\Controllers\ClassificationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -67,10 +67,21 @@ Route::middleware(['auth', 'admin'])->group(function () {
         ->name('munaqosah.reject');
     Route::delete('/admin/munaqosah/{id}', [MunaqosahController::class, 'destroy'])
         ->name('munaqosah.destroy');
-    Route::get('/admin/examData', [ClassifiactionController::class, 'examData'])
+    Route::post('/admin/trainData/import', [ClassificationController::class, 'importExcel'])->name('trainData.import');
+    Route::get(
+        '/admin/trainData/export',
+        [ClassificationController::class, 'exportExcel']
+    )->name('trainData.export');
+    Route::get(
+        '/admin/trainData',
+        [ClassificationController::class, 'showTrainData']
+    )->name('trainData.show');
+    Route::get('/admin/examData', [ClassificationController::class, 'examData'])
         ->name('examData');
-    Route::get('/admin/trainData', [ClassifiactionController::class, 'trainData'])
-        ->name('trainData');
-    Route::get('/admin/classificationResult', [ClassifiactionController::class, 'classificationResult'])
+    Route::get('/admin/classificationResult', [ClassificationController::class, 'classificationResult'])
         ->name('classificationResult');
+    Route::delete('/admin/trainData/{id}', [ClassificationController::class, 'deleteTrainData'])
+        ->name('trainData.delete');
+    Route::post('/admin/trainData/reset', [ClassificationController::class, 'resetTrainData'])
+        ->name('trainData.reset');
 });

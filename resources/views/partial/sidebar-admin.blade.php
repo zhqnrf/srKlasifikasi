@@ -38,14 +38,15 @@
         <li class="nav-heading">Klasifikasi</li>
 
         <li class="nav-item">
-            <a class="nav-link {{ Route::is('examData') ? '' : 'collapsed' }}" href="{{ route('examData') }}">
+            <a class="nav-link {{ Route::is('trainData.show') ? '' : 'collapsed' }}"
+                href="{{ route('trainData.show') }}">
                 <i class='bx bx-data'></i>
                 <span>Data Latih</span>
             </a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link {{ Route::is('trainData') ? '' : 'collapsed' }}" href="{{ route('trainData') }}">
+            <a class="nav-link {{ Route::is('examData') ? '' : 'collapsed' }}" href="{{ route('examData') }}">
                 <i class='bx bx-test-tube'></i>
                 <span>Data Uji</span>
             </a>

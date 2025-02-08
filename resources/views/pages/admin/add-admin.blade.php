@@ -23,66 +23,75 @@
                         <div class="card-body">
                             <h5 class="card-title">Data Admin</h5>
                             @if(session('success'))
-                                <div class="alert alert-success">
-                                    {{ session('success') }}
-                                </div>
-                                @endif
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                            @endif
                             {{-- Tabel Admin --}}
-                            <table id="addAdminTable" class="table">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Email</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($admins as $index => $admin)
-                                    <tr>
-                                        <td>{{ $index+1 }}</td>
-                                        <td>{{ $admin->email }}</td>
-                                <td>
-                                    <form action="{{ route('admin.delete', $admin->id) }}" method="POST" id="deleteForm{{ $admin->id }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-danger btn-sm" type="button" onclick="confirmDelete({{ $admin->id }})">
-                                            <i class='bx bx-trash'></i>
-                                        </button>
-                                    </form>
-                                </td>
-                                
-                                <script>
-                                    function confirmDelete(adminId) {
-                                        Swal.fire({
-                                            title: 'Yakin ingin menghapus admin ini?',
-                                            icon: 'warning',
-                                            showCancelButton: true,
-                                            confirmButtonColor: '#d33',
-                                            cancelButtonColor: '#3085d6',
-                                            confirmButtonText: 'Ya, hapus!',
-                                            cancelButtonText: 'Batal'
-                                        }).then((result) => {
-                                            if (result.isConfirmed) {
-                                                document.getElementById('deleteForm' + adminId).submit();
-                                            }
-                                        });
-                                    }
-                                </script>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table id="addAdminTable" class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Email</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($admins as $index => $admin)
+                                        <tr>
+                                            <td>{{ $index+1 }}</td>
+                                            <td>{{ $admin->email }}</td>
+                                            <td>
+                                                <form action="{{ route('admin.delete', $admin->id) }}" method="POST"
+                                                    id="deleteForm{{ $admin->id }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="btn btn-danger btn-sm" type="button"
+                                                        onclick="confirmDelete({{ $admin->id }})">
+                                                        <i class='bx bx-trash'></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+
+                                            <script>
+                                                function confirmDelete(adminId) {
+                                                                        Swal.fire({
+                                                                            title: 'Yakin ingin menghapus admin ini?',
+                                                                            icon: 'warning',
+                                                                            showCancelButton: true,
+                                                                            confirmButtonColor: '#d33',
+                                                                            cancelButtonColor: '#3085d6',
+                                                                            confirmButtonText: 'Ya, hapus!',
+                                                                            cancelButtonText: 'Batal'
+                                                                        }).then((result) => {
+                                                                            if (result.isConfirmed) {
+                                                                                document.getElementById('deleteForm' + adminId).submit();
+                                                                            }
+                                                                        });
+                                                                    }
+                                            </script>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                             <!-- DataTables CSS & JS (bisa diletakkan di layout umum juga) -->
                             <link rel="stylesheet"
                                 href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
                             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                             <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
                             <!-- SweetAlert2 CSS & JS -->
-                            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
-                            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+                            <link rel="stylesheet"
+                                href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
+                            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js">
+                            </script>
                             <script>
                                 $(document).ready(function () {
                                     $('#addAdminTable').DataTable({
+                                        responsive: true,
+                                        scrollX: true,
+                                        autoWidth: false,
                                         "language": {
                                             "search": "Cari:",
                                             "lengthMenu": "Tampilkan _MENU_ data",

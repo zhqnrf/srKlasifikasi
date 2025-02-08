@@ -12,7 +12,7 @@ class MunaqosahController extends Controller
     {
         $riwayat = Riwayat::findOrFail($id);
         $riwayat->delete();
-        return redirect()->back()->with('success', 'Data riwayat berhasil dihapus.');
+        return redirect()->back()->with('success', 'Data Munaqosah berhasil dihapus.');
     }
 
     /**
@@ -37,10 +37,10 @@ class MunaqosahController extends Controller
     /**
      * Tampilkan data munaqosah untuk admin.
      */
-     public function showMunaqosah()
+    public function showMunaqosah()
     {
         $riwayat = Riwayat::whereNotNull('sent_at')
-        ->where('admin_id', auth()->id()) // hanya data untuk admin yang sedang login
+            ->where('admin_id', auth()->id()) // hanya data untuk admin yang sedang login
             ->orderBy('created_at', 'desc')
             ->get();
 

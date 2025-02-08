@@ -19,15 +19,12 @@ class Riwayat extends Model
         'nilai_n',
         'status',
         'sent_at',
-        'admin_id',         
-        'munaqosah_status',  
+        'admin_id',
+        'munaqosah_status',
     ];
-
-    /**
-     * Relasi ke model User (jika diperlukan)
-     */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id')
+            ->select(['id', 'name', 'jenis_kelamin', 'nis', 'asal_daerah']);
     }
 }

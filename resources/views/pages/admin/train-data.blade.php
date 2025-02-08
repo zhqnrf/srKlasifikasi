@@ -1,165 +1,211 @@
 @extends('layouts.app-admin')
-<title>Data Munaqosah | SR Klasifikasi</title>
+<title>Data Latih | SR Klasifikasi</title>
 
 @section('content')
 <main id="main" class="main">
     <div class="row">
-        <div class="pagetitle">
-            <h1>Munaqosah</h1>
-            <nav>
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">Admin</a></li>
-                    <li class="breadcrumb-item active">Munaqosah Santri</li>
-                </ol>
-            </nav>
+        <div class="pagetitle d-flex justify-content-between align-items-center">
+            <h1>Data Latih</h1>
+        </div>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Admin</a></li>
+                <li class="breadcrumb-item active">Data Latih</li>
+            </ol>
+        </nav>
+
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Tindakan</h5>
+                    <div class="d-flex gap-2 align-items-center">
+                        <form action="{{ route('trainData.import') }}" method="POST" enctype="multipart/form-data"
+                            class="d-flex gap-2 flex-grow-1">
+                            @csrf
+                            <div class="input-group">
+                                <input type="file" name="file" class="form-control" required>
+                                <button type="submit" class="btn btn-primary d-flex gap-1">
+                                    <i class="bx bxs-file-import"></i> Import
+                                </button>
+                            </div>
+                        </form>
+                        <a href="{{ route('trainData.export') }}" class="btn btn-success d-flex gap-1"
+                            style="margin-block-end: 1em">
+                            <i class="bx bxs-file-export"></i> Export
+                        </a>
+                        <form action="{{ route('trainData.reset') }}" method="POST" class="d-inline reset-form">
+                            @csrf
+                            <button type="button" class="btn btn-warning d-flex gap-1 btn-reset">
+                                <i class="bx bx-reset"></i> Reset Data
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="col-12 dashboard">
             <div class="row">
                 <div class="col-lg-12">
-
-                    @if(session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                    @endif
-
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Munaqosah Santri</h5>
+                            <h5 class="card-title">Data Latih</h5>
 
-                            <!-- Tabel Riwayat -->
-                            <table id="dataTable" class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Nama Santri</th>
-                                        <th>Tanggal</th>
-                                        <th>Tahun Angkatan</th>
-                                        <th>Al-Qur'an Isi</th>
-                                        <th>Al-Hadis Isi</th>
-                                        <th>Nilai N</th>
-                                        <th>Status</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($riwayat as $item)
-                                    <tr>
-                                        <td>{{ $item->user->name ?? '—' }}</td>
-                                        <td>{{ $item->created_at->format('Y-m-d') }}</td>
-                                        <td>{{ $item->tahun_angkatan }}</td>
-                                        <td>{{ $item->alquran }}</td>
-                                        <td>{{ $item->alhadis }}</td>
-                                        <td>{{ number_format($item->nilai_n, 2) }}</td>
-                                        <td>{{ $item->status }}</td>
-                                        <td>
-                                            @if($item->munaqosah_status === 'Sedang di Verifikasi')
-                                            <!-- Jika belum ada keputusan, tampilkan tombol Verifikasi, Tolak, dan Delete -->
-
-                                            <!-- Tombol Verifikasi -->
-                                            <form action="{{ route('munaqosah.verify', $item->id) }}" method="POST"
-                                                style="display:inline;">
-                                                @csrf
-                                                <button type="submit" class="btn btn-success btn-sm">
-                                                    <i class='bx bxs-check-circle'></i> Verifikasi
+                            <div class="table-responsive">
+                                <table id="dataTable" class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nama</th>
+                                            <th>Jenis Kelamin</th>
+                                            <th>NIS</th>
+                                            <th>Asal Daerah</th>
+                                            <th>Tahun Angkatan</th>
+                                            <th>Capaian Hadis</th>
+                                            <th>Capaian Al Qur'an</th>
+                                            <th>Target</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($santris as $item)
+                                        <tr>
+                                            <td>{{ $item->nama ?? '—' }}</td>
+                                            <td>{{ $item->jenis_kelamin ?? '—' }}</td>
+                                            <td>{{ $item->nis ?? '—' }}</td>
+                                            <td>{{ $item->asal_daerah ?? '—' }}</td>
+                                            <td>{{ $item->tahun_angkatan }}</td>
+                                            <td>
+                                                {{ $item->alhadis >= 1997 ? 'Khatam' : 'Belum Khatam' }}
+                                            </td>
+                                            <td>
+                                                {{ $item->alquran >= 606 ? 'Khatam' : 'Belum Khatam' }}
+                                            </td>
+                                            <td>{{ $item->status }}</td>
+                                            <td>
+                                                <button class="btn btn-danger btn-sm btn-delete"
+                                                    data-id="{{ $item->id }}">
+                                                    <i class='bx bxs-trash'></i> Delete
                                                 </button>
-                                            </form>
-
-                                            <!-- Tombol Tolak -->
-                                            <form action="{{ route('munaqosah.reject', $item->id) }}" method="POST"
-                                                style="display:inline;">
-                                                @csrf
-                                                <button type="submit" class="btn btn-warning btn-sm">
-                                                    <i class='bx bxs-x-circle'></i> Tolak
-                                                </button>
-                                            </form>
-
-                                            <!-- Tombol Delete dengan SweetAlert -->
-                                            <button class="btn btn-danger btn-sm btn-delete" data-id="{{ $item->id }}">
-                                                <i class='bx bxs-trash'></i> Delete
-                                            </button>
-                                            @else
-                                            <!-- Jika sudah ada keputusan (verified atau ditolak), tampilkan badge "Selesai" -->
-                                            <span class="badge bg-info">Selesai</span>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            <!-- Sertakan SweetAlert2 -->
-                            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-                            <script>
-                                $(document).on('click', '.btn-delete', function(e){
-                                   e.preventDefault();
-                                   var id = $(this).data('id');
-                                   Swal.fire({
-                                       title: 'Apakah Anda yakin?',
-                                       text: "Data akan dihapus permanen!",
-                                       icon: 'warning',
-                                       showCancelButton: true,
-                                       confirmButtonColor: '#3085d6',
-                                       cancelButtonColor: '#d33',
-                                       confirmButtonText: 'Ya, hapus!'
-                                   }).then((result) => {
-                                       if (result.isConfirmed) {
-                                           // Buat form secara dinamis untuk melakukan request DELETE
-                                           var form = $('<form>', {
-                                               'method': 'POST',
-                                               'action': '/admin/munaqosah/' + id
-                                           });
-                                           var token = '{{ csrf_token() }}';
-                                           var hiddenInput = $('<input>', {
-                                               'name': '_token',
-                                               'value': token,
-                                               'type': 'hidden'
-                                           });
-                                           var hiddenMethod = $('<input>', {
-                                               'name': '_method',
-                                               'value': 'DELETE',
-                                               'type': 'hidden'
-                                           });
-                                           form.append(hiddenInput, hiddenMethod).appendTo('body').submit();
-                                       }
-                                   })
-                                });
-                            </script>
-
-                            <!-- DataTables CSS & JS -->
-                            <link rel="stylesheet"
-                                href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-                            <!-- Tambahkan CSS Responsive -->
-                            <link rel="stylesheet"
-                                href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css">
-
-                            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                            <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-                            <!-- Tambahkan JS Responsive -->
-                            <script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js">
-                            </script>
-
-                            <script>
-                                $(document).ready(function () {
-                                    $('#dataTable').DataTable({
-                                        responsive: true, // Aktifkan fitur responsif
-                                        "language": {
-                                            "search": "Cari:",
-                                            "lengthMenu": "Tampilkan _MENU_ data",
-                                            "zeroRecords": "Tidak ada data yang cocok",
-                                            "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                                            "infoEmpty": "Tidak ada data tersedia",
-                                            "infoFiltered": "(disaring dari _MAX_ total data)"
-                                        }
-                                    });
-                                });
-                            </script>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
 
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 </main>
+
+<!-- DataTables & SweetAlert -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable({
+            responsive: true,
+            scrollX: true,
+            autoWidth: false,
+            "language": {
+                "search": "Cari:",
+                "lengthMenu": "Tampilkan _MENU_ data",
+                "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                "infoEmpty": "Tidak ada data tersedia",
+                "infoFiltered": "(disaring dari _MAX_ total data)"
+            }
+        });
+    });
+</script>
+
+<script>
+    $(document).on('click', '.btn-delete', function(e){
+        e.preventDefault();
+        var id = $(this).data('id');
+        
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Data hanya akan dihapus dari halaman ini, tidak dari database utama!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, hapus!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/admin/trainData/" + id,
+                    type: "DELETE",
+                    data: {
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        Swal.fire(
+                            'Terhapus!',
+                            'Data berhasil dihapus dari tampilan halaman ini.',
+                            'success'
+                        );
+                        location.reload(); // Refresh tabel setelah dihapus
+                    },
+                    error: function(response) {
+                        Swal.fire(
+                            'Gagal!',
+                            'Terjadi kesalahan saat menghapus data.',
+                            'error'
+                        );
+                    }
+                });
+            }
+        });
+    });
+
+$(document).on('click', '.btn-reset', function(e) {
+    e.preventDefault();
+    
+    Swal.fire({
+        title: 'Apakah Anda yakin?',
+        text: "Data latih akan diambil ulang dari data riwayat!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, reset!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var resetUrl = $(".reset-form").attr("action"); // Ambil URL dari form reset
+            
+            $.ajax({
+                url: resetUrl,
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    Swal.fire(
+                        'Reset Berhasil!',
+                        'Data latih telah diambil ulang dari data riwayat.',
+                        'success'
+                    ).then(() => {
+                        location.reload(); // Refresh tabel setelah reset
+                    });
+                },
+                error: function(response) {
+                    Swal.fire(
+                        'Gagal!',
+                        'Terjadi kesalahan saat mereset data.',
+                        'error'
+                    );
+                }
+            });
+        }
+    });
+});
+
+</script>
 @endsection

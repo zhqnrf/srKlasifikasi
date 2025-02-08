@@ -83,7 +83,8 @@
                                                 </form>
 
                                                 <!-- Tombol Kirim hanya muncul di data terakhir -->
-                                                @if($loop->first)
+                                                @if($loop->first && ($item->munaqosah_status === null ||
+                                                $item->munaqosah_status === 'Belum Diverifikasi'))
                                                 <button type="button" class="btn btn-primary btn-sm btn-send"
                                                     data-id="{{ $item->id }}">
                                                     <i class='bx bxs-send'></i> Kirim

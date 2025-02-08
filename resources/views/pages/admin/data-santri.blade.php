@@ -32,8 +32,9 @@
                             <table id="dataTable" class="table">
                                 <thead>
                                     <tr>
-                                        <th>Nama Santri</th>
                                         <th>Tanggal</th>
+                                        <th>Nama Santri</th>
+                                        <th>NIS</th>
                                         <th>Tahun Angkatan</th>
                                         <th>Al-Qur'an Isi</th>
                                         <th>Al-Hadis Isi</th>
@@ -45,33 +46,36 @@
                                 <tbody>
                                     @foreach($riwayat as $item)
                                     <tr>
-                                        <td>{{ $item->user->name ?? '—' }}</td>
                                         <td>{{ $item->created_at->format('Y-m-d') }}</td>
+                                        <td>{{ $item->user->name ?? '—' }}</td>
+                                        <td>{{ $item->user->nis ?? '—' }}</td>
                                         <td>{{ $item->tahun_angkatan }}</td>
                                         <td>{{ $item->alquran }}</td>
                                         <td>{{ $item->alhadis }}</td>
                                         <td>{{ number_format($item->nilai_n, 2) }}</td>
                                         <td>{{ $item->status }}</td>
                                         <td>
-                                        @if($item->munaqosah_status === 'Sedang di Verifikasi')
+                                            @if($item->munaqosah_status === 'Sedang di Verifikasi')
                                             <!-- Jika belum ada keputusan, tampilkan tombol Verifikasi, Tolak, dan Delete -->
-                                        
+
                                             <!-- Tombol Verifikasi -->
-                                            <form action="{{ route('munaqosah.verify', $item->id) }}" method="POST" style="display:inline;">
+                                            <form action="{{ route('munaqosah.verify', $item->id) }}" method="POST"
+                                                style="display:inline;">
                                                 @csrf
                                                 <button type="submit" class="btn btn-success btn-sm">
                                                     <i class='bx bxs-check-circle'></i> Verifikasi
                                                 </button>
                                             </form>
-                                        
+
                                             <!-- Tombol Tolak -->
-                                            <form action="{{ route('munaqosah.reject', $item->id) }}" method="POST" style="display:inline;">
+                                            <form action="{{ route('munaqosah.reject', $item->id) }}" method="POST"
+                                                style="display:inline;">
                                                 @csrf
                                                 <button type="submit" class="btn btn-warning btn-sm">
                                                     <i class='bx bxs-x-circle'></i> Tolak
                                                 </button>
                                             </form>
-                                        
+
                                             <!-- Tombol Delete dengan SweetAlert -->
                                             <button class="btn btn-danger btn-sm btn-delete" data-id="{{ $item->id }}">
                                                 <i class='bx bxs-trash'></i> Delete
@@ -87,7 +91,7 @@
                             </table>
                             <!-- Sertakan SweetAlert2 -->
                             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-                            
+
                             <script>
                                 $(document).on('click', '.btn-delete', function(e){
                                    e.preventDefault();
