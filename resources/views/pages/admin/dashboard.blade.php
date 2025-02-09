@@ -25,6 +25,49 @@
         <!-- Statistik Jumlah Santri dan Tepat Waktu -->
         <div class="col-12 dashboard">
             <div class="row">
+                <div class="col-xxl-12 col-md-12">
+                    <div class="row">
+                        <!-- Card Tanggal -->
+                        <div class="col-md-6">
+                            <div class="card info-card date-card shadow-lg"
+                                style="background-color: #f8f9fa; border-left: 5px solid #007bff;">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title text-primary fw-bold">Tanggal Hari Ini</h5>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <div
+                                            class="card-icon rounded-circle bg-primary text-white d-flex align-items-center justify-content-center p-3">
+                                            <i class='bx bx-calendar text-white' style="font-size: 1.5rem;"></i>
+                                        </div>
+                                        <div class="ps-3">
+                                            <h6 id="current-date" class="fw-semibold " style="color: #012970">Loading...
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Waktu -->
+                        <div class="col-md-6">
+                            <div class="card info-card time-card shadow-lg"
+                                style="background-color: #f8f9fa; border-left: 5px solid #28a745;">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title text-success fw-bold">Waktu Saat Ini</h5>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <div
+                                            class="card-icon rounded-circle bg-success text-white d-flex align-items-center justify-content-center p-3">
+                                            <i class='bx bx-time text-white' style="font-size: 1.5rem;"></i>
+                                        </div>
+                                        <div class="ps-3">
+                                            <h6 id="current-time" class="fw-semibold " style="color: #012970">Loading...
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-xxl-6 col-md-6">
                     <div class="card info-card sales-card">
                         <div class="card-body">
@@ -134,50 +177,6 @@
                         </div>
                     </div>
 
-                </div>
-
-                <div class="col-xxl-12 col-md-12">
-                    <div class="row">
-                        <!-- Card Tanggal -->
-                        <div class="col-md-6">
-                            <div class="card info-card date-card shadow-lg"
-                                style="background-color: #f8f9fa; border-left: 5px solid #007bff;">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title text-primary fw-bold">Tanggal Hari Ini</h5>
-                                    <div class="d-flex align-items-center justify-content-center">
-                                        <div
-                                            class="card-icon rounded-circle bg-primary text-white d-flex align-items-center justify-content-center p-3">
-                                            <i class='bx bx-calendar text-white' style="font-size: 1.5rem;"></i>
-                                        </div>
-                                        <div class="ps-3">
-                                            <h6 id="current-date" class="fw-semibold " style="color: #012970">Loading...
-                                            </h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card Waktu -->
-                        <div class="col-md-6">
-                            <div class="card info-card time-card shadow-lg"
-                                style="background-color: #f8f9fa; border-left: 5px solid #28a745;">
-                                <div class="card-body text-center">
-                                    <h5 class="card-title text-success fw-bold">Waktu Saat Ini</h5>
-                                    <div class="d-flex align-items-center justify-content-center">
-                                        <div
-                                            class="card-icon rounded-circle bg-success text-white d-flex align-items-center justify-content-center p-3">
-                                            <i class='bx bx-time text-white' style="font-size: 1.5rem;"></i>
-                                        </div>
-                                        <div class="ps-3">
-                                            <h6 id="current-time" class="fw-semibold " style="color: #012970">Loading...
-                                            </h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

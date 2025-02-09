@@ -90,15 +90,6 @@
                                     </strong>
                                 </td>
                             </tr>
-                            <tr>
-                                <th><i class='bx bx-calculator'></i> Hasil</th>
-                                <td>
-                                    <span
-                                        class="badge {{ $latest->status === 'Tercapai' ? 'bg-success' : 'bg-danger' }}">
-                                        {{ $latest->status }}
-                                    </span>
-                                </td>
-                            </tr>
 
                             {{-- Perhitungan detail target keseluruhan --}}
                             @php
@@ -180,6 +171,15 @@
                                                     Belum Khatam, anda kurang {{ $hadisShort }} halaman
                                                 </span>
                                                 @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th><i class='bx bx-calculator'></i> Hasil</th>
+                                            <td>
+                                                <span
+                                                    class="badge {{ $latest->status === 'Tercapai' ? 'bg-success' : 'bg-danger' }}">
+                                                    {{ $latest->status }}
+                                                </span>
                                             </td>
                                         </tr>
 

@@ -19,10 +19,40 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Hasil Klasifikasi</h5>
+                    <div class="col-12 d-flex flex-wrap justify-content-between align-items-center my-3 gap-2">
+                        <h5 class="card-title mb-0">Hasil Klasifikasi</h5>
+
+                        <!-- Tombol Export -->
+                        <div class="d-flex flex-wrap gap-2">
+                            <button id="btnExcel" class="btn btn-success">
+                                <i class='bx bx-file'></i> Export Excel
+                            </button>
+                            <button id="btnCSV" class="btn btn-info text-white">
+                                <i class='bx bx-data'></i> Export CSV
+                            </button>
+                            <button id="btnPDF" class="btn btn-danger">
+                                <i class='bx bxs-file-pdf'></i> Export PDF
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filter Dropdown -->
+                    <div class="mb-3">
+                        <select id="filterColumn" class="form-select w-auto d-inline-block">
+                            <option value="">Pilih Kolom</option>
+                            <option value="0">Nama</option>
+                            <option value="1">Jenis Kelamin</option>
+                            <option value="3">Asal Daerah</option>
+                            <option value="4">Tahun Angkatan</option>
+                            <option value="8">Status Prediksi</option>
+                        </select>
+                        <input type="text" id="filterInput" class="form-control w-auto d-inline-block ms-2"
+                            placeholder="Cari...">
+                    </div>
+
                     <div class="table-responsive">
                         <table id="dataTable" class="table table-striped table-bordered">
-                            <thead>
+                            <thead class="custom-thead">
                                 <tr>
                                     <th>Nama</th>
                                     <th>Jenis Kelamin</th>
@@ -46,12 +76,19 @@
                                     <td>{{ $item->alhadis }}</td>
                                     <td>{{ $item->alquran }}</td>
                                     <td>{{ $item->status }}</td>
-                                    <td>{{ $item->predicted_status ?? 'Belum Diklasifikasi' }}</td>
+                                    <td>
+                                        @if ($item->predicted_status == 'Tercapai')
+                                        <span class="badge bg-success">Tepat</span>
+                                        @else
+                                        <span class="badge bg-danger">Terlambat</span>
+                                        @endif
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -60,25 +97,99 @@
 
 <!-- DataTables & SweetAlert -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
 
 <script>
     $(document).ready(function () {
-        $('#dataTable').DataTable({
+        var table = $('#dataTable').DataTable({
             responsive: true,
             scrollX: true,
             autoWidth: false,
-            "language": {
-                "search": "Cari:",
-                "lengthMenu": "Tampilkan _MENU_ data",
-                "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                "infoEmpty": "Tidak ada data tersedia",
-                "infoFiltered": "(disaring dari _MAX_ total data)"
+            order: [],
+            dom: 'Bfrtip',
+            buttons: [],
+            language: {
+                search: "Cari:",
+                lengthMenu: "Tampilkan _MENU_ data",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                infoEmpty: "Tidak ada data tersedia",
+                infoFiltered: "(disaring dari _MAX_ total data)"
             }
+        });
+
+        // Event untuk tombol export
+        $('#btnExcel').on('click', function () {
+            table.button('.buttons-excel').trigger();
+        });
+
+        $('#btnCSV').on('click', function () {
+            table.button('.buttons-csv').trigger();
+        });
+
+        $('#btnPDF').on('click', function () {
+            table.button('.buttons-pdf').trigger();
+        });
+
+        // Tambahkan tombol export
+        new $.fn.dataTable.Buttons(table, {
+            buttons: [
+                { extend: 'excelHtml5', className: 'buttons-excel', title: 'Data Klasifikasi' },
+                { extend: 'csvHtml5', className: 'buttons-csv', title: 'Data Klasifikasi' },
+                { extend: 'pdfHtml5', className: 'buttons-pdf', title: 'Data Klasifikasi' }
+            ]
+        });
+
+        table.buttons().container().appendTo($('.dataTables_wrapper'));
+
+        // Filter berdasarkan kolom
+        $('#filterInput').on('keyup', function () {
+            let columnIndex = $('#filterColumn').val();
+            if (columnIndex !== '') {
+                table.column(columnIndex).search(this.value).draw();
+            }
+        });
+
+        // Reset filter saat memilih opsi baru
+        $('#filterColumn').on('change', function () {
+            $('#filterInput').val('');
+            table.search('').columns().search('').draw();
         });
     });
 </script>
+
+<style>
+    .custom-thead {
+        background-color: #012970 !important;
+        color: white;
+    }
+
+    #dataTable tbody tr td {
+        background-color: #f8f9fa !important;
+        color: #012970;
+    }
+
+    .dt-buttons {
+        margin-bottom: 10px;
+    }
+
+    .dt-buttons .btn {
+        margin-right: 5px;
+    }
+
+    .form-select,
+    .form-control {
+        display: inline-block;
+        width: auto;
+    }
+</style>
+
 @endsection

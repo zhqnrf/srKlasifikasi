@@ -332,7 +332,13 @@
                                     <td>{{ $item->alhadis }}</td>
                                     <td>{{ $item->alquran }}</td>
                                     <td>{{ $item->status }}</td>
-                                    <td>{{ $item->predicted_status ?? 'Belum Diklasifikasi' }}</td>
+                                    <td>
+                                        @if ($item->predicted_status == 'Tercapai')
+                                        <span class="badge bg-success">Tepat</span>
+                                        @else
+                                        <span class="badge bg-danger">Terlambat</span>
+                                        @endif
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>

@@ -36,7 +36,7 @@
                         @endif
 
                         <form class="row g-3 needs-validation" action="{{ route('register.post') }}" method="POST"
-                            novalidate>
+                            novalidate id="registerForm">
                             @csrf
                             <div class="col-12">
                                 <label for="nameSantri" class="form-label">Nama</label>
@@ -58,9 +58,26 @@
 
                             <div class="col-12">
                                 <label for="passwordSantri" class="form-label">Password</label>
-                                <input type="password" name="password" class="form-control" id="passwordSantri"
-                                    required>
+                                <div class="input-group">
+                                    <input type="password" name="password" class="form-control" id="passwordSantri"
+                                        required>
+                                    <span class="input-group-text toggle-password" data-target="passwordSantri">
+                                        <i class="bx bx-hide"></i>
+                                    </span>
+                                </div>
                                 <div class="invalid-feedback">Masukkan Password Anda</div>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="confirmPasswordSantri" class="form-label">Konfirmasi Password</label>
+                                <div class="input-group">
+                                    <input type="password" name="password_confirmation" class="form-control"
+                                        id="confirmPasswordSantri" required>
+                                    <span class="input-group-text toggle-password" data-target="confirmPasswordSantri">
+                                        <i class="bx bx-hide"></i>
+                                    </span>
+                                </div>
+                                <div class="invalid-feedback">Masukkan Konfirmasi Password Anda</div>
                             </div>
 
                             <div class="col-12">
@@ -100,4 +117,50 @@
         </div>
     </div>
 </section>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Show/Hide Password
+        document.querySelectorAll(".toggle-password").forEach(button => {
+            button.addEventListener("click", function () {
+                let targetId = this.getAttribute("data-target");
+                let input = document.getElementById(targetId);
+                let icon = this.querySelector("i");
+
+                if (input.type === "password") {
+                    input.type = "text";
+                    icon.classList.remove("bx-hide");
+                    icon.classList.add("bx-show");
+                } else {
+                    input.type = "password";
+                    icon.classList.remove("bx-show");
+                    icon.classList.add("bx-hide");
+                }
+            });
+        });
+
+        // Validasi Konfirmasi Password dengan SweetAlert
+        document.getElementById("registerForm").addEventListener("submit", function (event) {
+            let password = document.getElementById("passwordSantri").value;
+            let confirmPassword = document.getElementById("confirmPasswordSantri").value;
+
+            if (password !== confirmPassword) {
+                event.preventDefault();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Konfirmasi password tidak cocok!',
+                });
+            }
+        });
+    });
+</script>
+
+<style>
+    .toggle-password {
+        cursor: pointer;
+    }
+</style>
+
 @endsection
