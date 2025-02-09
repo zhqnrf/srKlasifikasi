@@ -223,13 +223,19 @@
 
 
 
-        <div class="container my-5">
+        <div class="container">
+            <div class="row justify-content-center text-center mt-4">
+                <div class="col-12">
+                    <h2 class="status-title">Probabilitas Lain</h2>
+                </div>
+            </div>
             <div class="row">
                 <!-- Probabilitas Berdasarkan Asal Daerah -->
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header bg-info text-white">
-                            <h5 class="align-items-center d-flex fw-bold"><i class="bx bx-map-pin me-2"></i> Asal Daerah
+                            <h5 class="align-items-center d-flex fw-bold" style="margin-bottom: 0"><i
+                                    class="bx bx-map-pin me-2"></i> Asal Daerah
                             </h5>
                         </div>
                         <div class="card-body">
@@ -262,7 +268,8 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header bg-secondary text-white">
-                            <h5 class="align-items-center d-flex fw-bold"><i class="bx bxs-user-badge me-2"></i> Jenis
+                            <h5 class="align-items-center d-flex fw-bold" style="margin-bottom: 0"><i
+                                    class="bx bxs-user-badge me-2"></i> Jenis
                                 Kelamin
                             </h5>
                         </div>

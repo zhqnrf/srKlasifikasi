@@ -12,7 +12,7 @@ class UserSeeder extends Seeder
     {
         // Admin account
         User::create([
-            'name' => null, // admin tidak butuh name, boleh dikosongi
+            'name' => null,
             'nis'  => null, // admin tidak butuh NIS
             'email' => 'muhammadfirdaus@gmail.com',
             'password' => Hash::make('123456'), // password: 123456
@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'Zhaqian',
             'nis'  => 'A13411',
-            'email' => 'santri@gmail.com',
+            'email' => 'zhaaqianroufa@gmail.com',
             'password' => Hash::make('123456'), // password: 123456
             'role' => 'santri',
             'jenis_kelamin' => 'Laki-laki',
