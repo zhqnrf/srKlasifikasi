@@ -13,7 +13,18 @@
                 <li class="breadcrumb-item active">Data Latih</li>
             </ol>
         </nav>
-
+        <!-- SweetAlert2 -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        @if(session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "{{ session('error') }}",
+                confirmButtonColor: '#d33'
+            });
+        </script>
+        @endif
         <div class="col-lg-12">
             <div class="card shadow-sm border-0">
                 <div class="card-body">
@@ -79,7 +90,15 @@
                                             <td>{{ $item->nama ?? '—' }}</td>
                                             <td>{{ $item->jenis_kelamin ?? '—' }}</td>
                                             <td>{{ $item->nis ?? '—' }}</td>
-                                            <td>{{ $item->asal_daerah ?? '—' }}</td>
+                                            <td>
+                                                @if ($item->asal_daerah === 'dalamProvinsi')
+                                                Dalam Provinsi
+                                                @elseif ($item->asal_daerah === 'luarProvinsi')
+                                                Luar Provinsi
+                                                @else
+                                                {{ $item->asal_daerah }}
+                                                @endif
+                                            </td>
                                             <td>{{ $item->tahun_angkatan }}</td>
                                             <td>
                                                 {{ $item->alhadis >= 1997 ? 'Khatam' : 'Belum Khatam' }}
@@ -213,6 +232,9 @@ $(document).on('click', '.btn-reset', function(e) {
         }
     });
 });
+
+
+
 
 </script>
 @endsection

@@ -73,8 +73,8 @@
                                     <td>{{ $item->nis }}</td>
                                     <td>{{ $item->asal_daerah }}</td>
                                     <td>{{ $item->tahun_angkatan }}</td>
-                                    <td>{{ $item->alhadis }}</td>
-                                    <td>{{ $item->alquran }}</td>
+                                    <td>{{ number_format(($item->alhadis / 1997) * 100, 2) }}%</td>
+                                    <td>{{ number_format(($item->alquran / 606) * 100, 2) }}%</td>
                                     <td>{{ $item->status }}</td>
                                     <td>
                                         @if ($item->predicted_status == 'Tercapai')

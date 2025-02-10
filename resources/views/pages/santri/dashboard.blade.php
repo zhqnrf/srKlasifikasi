@@ -22,10 +22,17 @@
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
 
-    .text-success,
-    .text-danger {
-        font-size: 1.3rem;
-        font-weight: bold;
+    .qr-container {
+        display: none;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .qr-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 10px;
     }
 </style>
 <main id="main" class="main">
@@ -40,7 +47,6 @@
             </nav>
         </div><!-- End Page Title -->
 
-        <!-- Munaqosah Card -->
         <div class="col-12">
             <div class="card info-card verification-card">
                 <div class="card-body">
@@ -55,9 +61,25 @@
                             <h6 class="text-danger">Ditolak</h6>
                             @elseif($latestRiwayat->munaqosah_status === 'Terverifikasi')
                             <h6 class="text-success">Terverifikasi</h6>
-                            <button class="btn btn-primary mt-2" onclick="generateQRCode()">Tampilkan QR</button>
-                            <div id="qrcode" class="mt-3"></div>
-                            <a id="downloadQR" class="btn btn-success mt-2 d-none" download="qrcode.pdf">Unduh PDF</a>
+
+                            <!-- Tombol Show/Hide QR -->
+                            <div class="qr-buttons">
+                                <button id="btnShowQR" class="btn btn-primary">
+                                    <i class='bx bx-show'></i> Tampilkan QR
+                                </button>
+                                <button id="btnHideQR" class="btn btn-secondary d-none">
+                                    <i class='bx bx-hide'></i> Sembunyikan QR
+                                </button>
+                            </div>
+
+                            <!-- Tempat Menampilkan QR Code -->
+                            <div id="qrContainer" class="qr-container">
+                                <div id="qrcode"></div>
+                                <a id="downloadQR" class="btn btn-success mt-2 d-none" download="qrcode.pdf">
+                                    <i class='bx bxs-file-pdf'></i> Unduh PDF
+                                </a>
+                            </div>
+
                             @else
                             <h6 class="text-warning">Belum Diverifikasi</h6>
                             @endif
@@ -65,13 +87,10 @@
                             <h6>Belum ada data</h6>
                             @endif
                         </div>
-
-
                     </div>
                 </div>
             </div>
         </div>
-        <!-- End Munaqosah Card -->
 
         <div class="col-12 dashboard">
             <div class="row">
@@ -262,5 +281,27 @@ Tanggal: {{ now()->format('d-m-Y') }}`;
             doc.save("qrcode.pdf");
         };
     }
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let qrContainer = document.getElementById("qrContainer");
+        let btnShowQR = document.getElementById("btnShowQR");
+        let btnHideQR = document.getElementById("btnHideQR");
+        let qrcodeElement = document.getElementById("qrcode");
+        let downloadQR = document.getElementById("downloadQR");
+
+        btnShowQR.addEventListener("click", function () {
+            generateQRCode();
+            qrContainer.style.display = "block";
+            btnShowQR.classList.add("d-none");
+            btnHideQR.classList.remove("d-none");
+        });
+
+        btnHideQR.addEventListener("click", function () {
+            qrContainer.style.display = "none";
+            btnShowQR.classList.remove("d-none");
+            btnHideQR.classList.add("d-none");
+        });
+    });
 </script>
 @endsection

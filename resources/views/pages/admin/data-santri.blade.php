@@ -26,71 +26,80 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Munaqosah Santri</h5>
+                            <div class="d-flex justify-content-between align-items-center my-3">
+                                <h5 class="card-title mb-0">Munaqosah Santri</h5>
+                                <button id="btnExcel" class="btn btn-success">
+                                    <i class='bx bx-file'></i> Export Excel
+                                </button>
+                            </div>
 
                             <!-- Tabel Riwayat -->
-                            <table id="dataTable" class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Tanggal</th>
-                                        <th>Nama Santri</th>
-                                        <th>NIS</th>
-                                        <th>Tahun Angkatan</th>
-                                        <th>Al-Qur'an Isi</th>
-                                        <th>Al-Hadis Isi</th>
-                                        <th>Nilai N</th>
-                                        <th>Status</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($riwayat as $item)
-                                    <tr>
-                                        <td>{{ $item->created_at->format('Y-m-d') }}</td>
-                                        <td>{{ $item->user->name ?? '—' }}</td>
-                                        <td>{{ $item->user->nis ?? '—' }}</td>
-                                        <td>{{ $item->tahun_angkatan }}</td>
-                                        <td>{{ $item->alquran }}</td>
-                                        <td>{{ $item->alhadis }}</td>
-                                        <td>{{ number_format($item->nilai_n, 2) }}</td>
-                                        <td>{{ $item->status }}</td>
-                                        <td>
-                                            @if($item->munaqosah_status === 'Sedang di Verifikasi')
-                                            <!-- Jika belum ada keputusan, tampilkan tombol Verifikasi, Tolak, dan Delete -->
+                            <div class="table-responsive">
+                                <table id="dataTable" class="table table-striped table-bordered">
+                                    <thead class="custom-thead">
+                                        <tr>
+                                            <th>Tanggal</th>
+                                            <th>Nama Santri</th>
+                                            <th>NIS</th>
+                                            <th>Tahun Angkatan</th>
+                                            <th>Al-Qur'an Isi</th>
+                                            <th>Persentase Qur'an</th>
+                                            <th>Al-Hadis Isi</th>
+                                            <th>Persentase Hadis</th>
+                                            <th>Nilai N</th>
+                                            <th>Status</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($riwayat as $item)
+                                        <tr>
+                                            <td>{{ $item->created_at->format('Y-m-d') }}</td>
+                                            <td>{{ $item->user->name ?? '—' }}</td>
+                                            <td>{{ $item->user->nis ?? '—' }}</td>
+                                            <td>{{ $item->tahun_angkatan }}</td>
+                                            <td>{{ $item->alquran }}</td>
+                                            <td>{{ number_format(($item->alquran / 606) * 100, 2) }}%</td>
+                                            <td>{{ $item->alhadis }}</td>
+                                            <td>{{ number_format(($item->alhadis / 1997) * 100, 2) }}%</td>
+                                            <td>{{ number_format($item->nilai_n, 2) }}</td>
+                                            <td>{{ $item->status }}</td>
+                                            <td>
+                                                @if($item->munaqosah_status === 'Sedang di Verifikasi')
+                                                <!-- Tombol Verifikasi -->
+                                                <form action="{{ route('munaqosah.verify', $item->id) }}" method="POST"
+                                                    style="display:inline;">
+                                                    @csrf
+                                                    <button type="submit" class="mb-1 btn btn-success btn-sm">
+                                                        <i class='bx bxs-check-circle'></i> Verifikasi
+                                                    </button>
+                                                </form>
 
-                                            <!-- Tombol Verifikasi -->
-                                            <form action="{{ route('munaqosah.verify', $item->id) }}" method="POST"
-                                                style="display:inline;">
-                                                @csrf
-                                                <button type="submit" class="mb-1 btn btn-success btn-sm">
-                                                    <i class='bx bxs-check-circle'></i> Verifikasi
+                                                <!-- Tombol Tolak -->
+                                                <form action="{{ route('munaqosah.reject', $item->id) }}" method="POST"
+                                                    style="display:inline;">
+                                                    @csrf
+                                                    <button type="submit" class="mb-1 btn btn-warning btn-sm">
+                                                        <i class='bx bxs-x-circle'></i> Tolak
+                                                    </button>
+                                                </form>
+
+                                                <!-- Tombol Delete dengan SweetAlert -->
+                                                <button class="mb-1 btn btn-danger btn-sm btn-delete"
+                                                    data-id="{{ $item->id }}">
+                                                    <i class='bx bxs-trash'></i> Delete
                                                 </button>
-                                            </form>
+                                                @else
+                                                <span class="badge bg-info">Selesai</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
 
-                                            <!-- Tombol Tolak -->
-                                            <form action="{{ route('munaqosah.reject', $item->id) }}" method="POST"
-                                                style="display:inline;">
-                                                @csrf
-                                                <button type="submit" class="mb-1 btn btn-warning btn-sm">
-                                                    <i class='bx bxs-x-circle'></i> Tolak
-                                                </button>
-                                            </form>
-
-                                            <!-- Tombol Delete dengan SweetAlert -->
-                                            <button class="mb-1 btn btn-danger btn-sm btn-delete"
-                                                data-id="{{ $item->id }}">
-                                                <i class='bx bxs-trash'></i> Delete
-                                            </button>
-                                            @else
-                                            <!-- Jika sudah ada keputusan (verified atau ditolak), tampilkan badge "Selesai" -->
-                                            <span class="badge bg-info">Selesai</span>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            <!-- Sertakan SweetAlert2 -->
+                            <!-- SweetAlert2 -->
                             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
                             <script>
@@ -107,7 +116,6 @@
                                        confirmButtonText: 'Ya, hapus!'
                                    }).then((result) => {
                                        if (result.isConfirmed) {
-                                           // Buat form secara dinamis untuk melakukan request DELETE
                                            var form = $('<form>', {
                                                'method': 'POST',
                                                'action': '/admin/munaqosah/' + id
@@ -132,31 +140,62 @@
                             <!-- DataTables CSS & JS -->
                             <link rel="stylesheet"
                                 href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-                            <!-- Tambahkan CSS Responsive -->
                             <link rel="stylesheet"
-                                href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css">
-
+                                href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
                             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                             <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-                            <!-- Tambahkan JS Responsive -->
-                            <script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js">
+                            <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js">
                             </script>
+                            <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+                            <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
 
                             <script>
                                 $(document).ready(function () {
-                                    $('#dataTable').DataTable({
-                                        responsive: true, // Aktifkan fitur responsif
-                                        "language": {
-                                            "search": "Cari:",
-                                            "lengthMenu": "Tampilkan _MENU_ data",
-                                            "zeroRecords": "Tidak ada data yang cocok",
-                                            "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                                            "infoEmpty": "Tidak ada data tersedia",
-                                            "infoFiltered": "(disaring dari _MAX_ total data)"
+                                    var table = $('#dataTable').DataTable({
+                                        responsive: true,
+                                        dom: 'Bfrtip',
+                                        buttons: [],
+                                        language: {
+                                            search: "Cari:",
+                                            lengthMenu: "Tampilkan _MENU_ data",
+                                            info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                                            infoEmpty: "Tidak ada data tersedia",
+                                            infoFiltered: "(disaring dari _MAX_ total data)"
                                         }
                                     });
+
+                                    // Event untuk tombol export
+                                    $('#btnExcel').on('click', function () {
+                                        table.button('.buttons-excel').trigger();
+                                    });
+
+                                    // Tambahkan tombol export
+                                    new $.fn.dataTable.Buttons(table, {
+                                        buttons: [
+                                            {
+                                                extend: 'excelHtml5',
+                                                text: 'Export ke Excel',
+                                                className: 'buttons-excel',
+                                                title: 'Data Munaqosah'
+                                            }
+                                        ]
+                                    });
+
+                                    table.buttons().container().appendTo($('.dataTables_wrapper'));
                                 });
                             </script>
+
+                            <style>
+                                .custom-thead {
+                                    background-color: #012970 !important;
+                                    color: white;
+                                }
+
+                                #dataTable tbody tr td {
+                                    background-color: #f8f9fa !important;
+                                    color: #012970;
+                                }
+                            </style>
 
                         </div>
                     </div>
