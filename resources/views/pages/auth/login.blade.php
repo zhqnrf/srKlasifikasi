@@ -1,6 +1,7 @@
 @extends('layouts.app-none')
 @section('title', 'Login | SR Klasifikasi')
 @section('content')
+
 <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
     <div class="container">
         <div class="row justify-content-center">
@@ -20,29 +21,35 @@
 
                         {{-- Tampilkan error jika ada --}}
                         @if($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
+                        <script>
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: "{{ $errors->first() }}",
+                                confirmButtonColor: '#d33'
+                            });
+                        </script>
                         @endif
 
                         @if(session('success'))
-                        <div class="alert alert-success">
-                            {{ session('success') }}
-                        </div>
+                        <script>
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil!',
+                                text: "{{ session('success') }}",
+                                confirmButtonColor: '#28a745'
+                            });
+                        </script>
                         @endif
 
                         <form class="row g-3 needs-validation" action="{{ route('login.post') }}" method="POST"
                             novalidate>
                             @csrf
                             <div class="col-12">
-                                <label for="emailUser" class="form-label">Email</label>
+                                <label for="identifier" class="form-label">NIS / Email</label>
                                 <div class="input-group has-validation">
-                                    <input type="text" name="email" class="form-control" id="emailUser" required>
-                                    <div class="invalid-feedback">Masukkan Email Anda</div>
+                                    <input type="text" name="identifier" class="form-control" id="identifier" required>
+                                    <div class="invalid-feedback">Masukkan NIS atau Email Anda</div>
                                 </div>
                             </div>
 
@@ -51,7 +58,6 @@
                                 <div class="input-group has-validation">
                                     <input type="password" name="password" class="form-control" id="passwordUser"
                                         required>
-                                    <!-- Tombol toggle untuk show/hide password -->
                                     <button class="btn btn-outline-secondary" type="button" id="togglePassword">
                                         <i class="bx bx-show"></i>
                                     </button>
@@ -94,4 +100,5 @@
         }
     });
 </script>
+
 @endsection

@@ -18,37 +18,33 @@ class AuthController extends Controller
     }
 
     /**
-     * Proses login.
+     * Proses login (bisa dengan Email atau NIS).
      */
     public function login(Request $request)
     {
         // Validasi input
         $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required',
+            'identifier' => 'required', // Bisa Email atau NIS
+            'password'   => 'required',
         ]);
 
-        // Ambil kredensial
-        $credentials = $request->only('email', 'password');
+        // Coba autentikasi menggunakan Email atau NIS
+        $credentials = [
+            filter_var($request->identifier, FILTER_VALIDATE_EMAIL) ? 'email' : 'nis' => $request->identifier,
+            'password' => $request->password,
+        ];
 
-        // Coba autentikasi menggunakan kredensial
         if (Auth::attempt($credentials)) {
-            // Regenerasi session untuk menghindari session fixation
             $request->session()->regenerate();
-
-            // Ambil data user yang telah login
             $user = Auth::user();
 
-            // Redirect sesuai role user
-            if ($user->role === 'admin') {
-                return redirect()->route('admin.dashboard')->with('success', 'Selamat datang Admin!');
-            } else {
-                return redirect()->route('dashboardSantri')->with('success', 'Selamat datang Santri!');
-            }
+            // Redirect berdasarkan role
+            return $user->role === 'admin'
+                ? redirect()->route('admin.dashboard')->with('success', 'Selamat datang Admin!')
+                : redirect()->route('dashboardSantri')->with('success', 'Selamat datang Santri!');
         }
 
-        // Jika autentikasi gagal, kembalikan ke halaman login dengan error
-        return back()->withErrors(['email' => 'Email / Password salah.']);
+        return back()->withErrors(['identifier' => 'NIS/Email atau Password salah.']);
     }
 
     /**
@@ -76,30 +72,30 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        // Validasi input pendaftaran
+        // Validasi input
         $request->validate([
-            'name'           => 'required|string|max:255',
-            'nis'            => 'required|string|max:50|unique:users,nis',
-            'email'          => 'required|email|unique:users,email',
-            'password'       => 'required|min:6',
-            'jenis_kelamin'  => 'required|in:Laki-laki,Perempuan',
-            'asal_daerah'    => 'required|in:dalamProvinsi,luarProvinsi',
+            'name'          => 'required|string|max:255',
+            'nis'           => 'required|string|max:50|unique:users,nis',
+            'email'         => 'required|email|unique:users,email',
+            'password'      => 'required|min:6',
+            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+            'asal_daerah'   => 'required|in:dalamProvinsi,luarProvinsi',
         ]);
 
-        // Buat user baru dengan role "santri"
+        // Buat user baru
         $user = User::create([
-            'name'           => $request->name,
-            'nis'            => $request->nis,
-            'email'          => $request->email,
-            'password'       => Hash::make($request->password),
-            'role'           => 'santri',
-            'jenis_kelamin'  => $request->jenis_kelamin,
-            'asal_daerah'    => $request->asal_daerah,
+            'name'          => $request->name,
+            'nis'           => $request->nis,
+            'email'         => $request->email,
+            'password'      => Hash::make($request->password),
+            'role'          => 'santri',
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'asal_daerah'   => $request->asal_daerah,
         ]);
 
-        // Login user secara otomatis
+        // Login otomatis setelah register
         Auth::login($user);
 
-        return redirect()->route('dashboardSantri')->with('success', 'Pendaftaran Santri berhasil!');
+        return redirect()->route('dashboardSantri')->with('success', 'Pendaftaran berhasil!');
     }
 }
