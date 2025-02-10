@@ -26,9 +26,10 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center my-3">
+                            <div class="d-flex flex-wrap justify-content-between align-items-center my-3 gap-2">
                                 <h5 class="card-title mb-0">Munaqosah Santri</h5>
-                                <div class="d-flex flex-wrap gap-2 mb-3">
+
+                                <div class="d-flex flex-wrap gap-2 align-items-center">
                                     <select id="filterColumn" class="form-select w-auto">
                                         <option value="">Filter</option>
                                         <option value="0">Nama Santri</option>
@@ -38,14 +39,14 @@
                                         <option value="6">Presentase Qur'an</option>
                                     </select>
 
-                                    <button id="sortAsc" class="btn btn-primary">
-                                        <i class='bx bx-sort-a-z'></i> Ascending
+                                    <button id="sortAsc" class="btn btn-primary d-flex align-items-center">
+                                        <i class='bx bx-sort-a-z me-1'></i> Ascending
                                     </button>
-                                    <button id="sortDesc" class="btn btn-secondary">
-                                        <i class='bx bx-sort-z-a'></i> Descending
+                                    <button id="sortDesc" class="btn btn-secondary d-flex align-items-center">
+                                        <i class='bx bx-sort-z-a me-1'></i> Descending
                                     </button>
-                                    <button id="btnExcel" class="btn btn-success">
-                                        <i class='bx bx-file'></i> Export Excel
+                                    <button id="btnExcel" class="btn btn-success d-flex align-items-center">
+                                        <i class='bx bx-file me-1'></i> Export Excel
                                     </button>
                                 </div>
                             </div>
@@ -128,10 +129,10 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center my-3">
+                            <div class="d-flex flex-wrap justify-content-between align-items-center my-3 gap-2">
                                 <h5 class="card-title mb-0">Munaqosah Astra</h5>
-                                <button id="btnExcelAstra" class="btn btn-success">
-                                    <i class='bx bx-file'></i> Export Excel
+                                <button id="btnExcelAstra" class="btn btn-success d-flex align-items-center">
+                                    <i class='bx bx-file me-1'></i> Export Excel
                                 </button>
                             </div>
 
@@ -217,10 +218,10 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center my-3">
+                            <div class="d-flex flex-wrap justify-content-between align-items-center my-3 gap-2">
                                 <h5 class="card-title mb-0">Munaqosah Astri</h5>
-                                <button id="btnExcelAstri" class="btn btn-success">
-                                    <i class='bx bx-file'></i> Export Excel
+                                <button id="btnExcelAstri" class="btn btn-success d-flex align-items-center">
+                                    <i class='bx bx-file me-1'></i> Export Excel
                                 </button>
                             </div>
 
