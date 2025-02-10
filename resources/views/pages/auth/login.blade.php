@@ -1,5 +1,5 @@
 @extends('layouts.app-none')
-@section('title', 'Login | SR Klasifikasi')
+<title>Login | SR Klasifikasi</title>
 @section('content')
 
 <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
