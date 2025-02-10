@@ -327,7 +327,13 @@
                                     <td>{{ $item->nama }}</td>
                                     <td>{{ $item->jenis_kelamin }}</td>
                                     <td>{{ $item->nis }}</td>
-                                    <td>{{ $item->asal_daerah }}</td>
+                                    <td>@if ($item->asal_daerah === 'dalamProvinsi')
+                                        Dalam Provinsi
+                                        @elseif ($item->asal_daerah === 'luarProvinsi')
+                                        Luar Provinsi
+                                        @else
+                                        {{ $item->asal_daerah }}
+                                        @endif</td>
                                     <td>{{ $item->tahun_angkatan }}</td>
                                     <td>{{ $item->alhadis }}</td>
                                     <td>{{ $item->alquran }}</td>

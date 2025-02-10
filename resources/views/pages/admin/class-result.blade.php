@@ -36,18 +36,28 @@
                         </div>
                     </div>
 
-                    <!-- Filter Dropdown -->
-                    <div class="mb-3">
-                        <select id="filterColumn" class="form-select w-auto d-inline-block">
+                    <!-- Filter & Sorting -->
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <select id="filterColumn" class="form-select w-auto">
                             <option value="">Pilih Kolom</option>
                             <option value="0">Nama</option>
                             <option value="1">Jenis Kelamin</option>
                             <option value="3">Asal Daerah</option>
                             <option value="4">Tahun Angkatan</option>
+                            <option value="5">Presentase Hadis</option>
+                            <option value="6">Presentase Qur'an</option>
+                            <option value="7">Akumulasi Qur'an & Hadis</option>
                             <option value="8">Status Prediksi</option>
                         </select>
-                        <input type="text" id="filterInput" class="form-control w-auto d-inline-block ms-2"
-                            placeholder="Cari...">
+                        <input type="text" id="filterInput" class="form-control w-auto ms-2" placeholder="Cari...">
+
+                        <!-- Tombol Sorting -->
+                        <button id="sortAsc" class="btn btn-primary">
+                            <i class='bx bx-sort-a-z'></i> Ascending
+                        </button>
+                        <button id="sortDesc" class="btn btn-secondary">
+                            <i class='bx bx-sort-z-a'></i> Descending
+                        </button>
                     </div>
 
                     <div class="table-responsive">
@@ -59,8 +69,9 @@
                                     <th>NIS</th>
                                     <th>Asal Daerah</th>
                                     <th>Tahun Angkatan</th>
-                                    <th>Capaian Hadis</th>
-                                    <th>Capaian Al Qur'an</th>
+                                    <th>Persentase Hadis</th>
+                                    <th>Persentase Qur'an</th>
+                                    <th>Akumulasi Qur'an & Hadis</th>
                                     <th>Status Aktual</th>
                                     <th>Status Prediksi</th>
                                 </tr>
@@ -71,10 +82,20 @@
                                     <td>{{ $item->nama }}</td>
                                     <td>{{ $item->jenis_kelamin }}</td>
                                     <td>{{ $item->nis }}</td>
-                                    <td>{{ $item->asal_daerah }}</td>
+                                    <td>
+                                        @if ($item->asal_daerah === 'dalamProvinsi')
+                                        Dalam Provinsi
+                                        @elseif ($item->asal_daerah === 'luarProvinsi')
+                                        Luar Provinsi
+                                        @else
+                                        {{ $item->asal_daerah }}
+                                        @endif
+                                    </td>
                                     <td>{{ $item->tahun_angkatan }}</td>
                                     <td>{{ number_format(($item->alhadis / 1997) * 100, 2) }}%</td>
                                     <td>{{ number_format(($item->alquran / 606) * 100, 2) }}%</td>
+                                    <td>{{ number_format(((($item->alhadis / 1997) * 100) + (($item->alquran / 606) *
+                                        100)) / 2, 2) }}%</td>
                                     <td>{{ $item->status }}</td>
                                     <td>
                                         @if ($item->predicted_status == 'Tercapai')
@@ -98,14 +119,12 @@
 <!-- DataTables & SweetAlert -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
 
 <script>
@@ -150,18 +169,13 @@
 
         table.buttons().container().appendTo($('.dataTables_wrapper'));
 
-        // Filter berdasarkan kolom
-        $('#filterInput').on('keyup', function () {
-            let columnIndex = $('#filterColumn').val();
-            if (columnIndex !== '') {
-                table.column(columnIndex).search(this.value).draw();
-            }
+        // Sorting
+        $('#sortAsc').on('click', function () {
+            table.order([$('#filterColumn').val(), 'asc']).draw();
         });
 
-        // Reset filter saat memilih opsi baru
-        $('#filterColumn').on('change', function () {
-            $('#filterInput').val('');
-            table.search('').columns().search('').draw();
+        $('#sortDesc').on('click', function () {
+            table.order([$('#filterColumn').val(), 'desc']).draw();
         });
     });
 </script>
@@ -175,20 +189,6 @@
     #dataTable tbody tr td {
         background-color: #f8f9fa !important;
         color: #012970;
-    }
-
-    .dt-buttons {
-        margin-bottom: 10px;
-    }
-
-    .dt-buttons .btn {
-        margin-right: 5px;
-    }
-
-    .form-select,
-    .form-control {
-        display: inline-block;
-        width: auto;
     }
 </style>
 
