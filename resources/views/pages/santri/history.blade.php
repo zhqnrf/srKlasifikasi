@@ -143,11 +143,16 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="admin_id" class="form-label">Admin</label>
+                        <label for="admin_id" class="form-label">Wali Kelas</label>
                         <select name="admin_id" id="admin_id" class="form-select" required>
                             <option value="">Pilih Wali Kelas</option>
                             @foreach($admins as $admin)
-                            <option value="{{ $admin->id }}" style="color: black">{{ $admin->email }}</option>
+                            @php
+                            $name = ucfirst(explode('@', $admin->email)[0]);
+                            @endphp
+                            <option value="{{ $admin->id }}" data-email="{{ $admin->email }}" style="color: black">
+                                Ustadz {{ $name }}
+                            </option>
                             @endforeach
                         </select>
                     </div>

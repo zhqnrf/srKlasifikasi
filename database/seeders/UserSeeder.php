@@ -13,11 +13,20 @@ class UserSeeder extends Seeder
         // Admin account
         User::create([
             'name' => null,
-            'nis'  => null, // admin tidak butuh NIS
-            'email' => 'muhammadfirdaus@gmail.com',
+            'nis'  => null,
+            'email' => 'firdaus@gmail.com',
             'password' => Hash::make('123456'), // password: 123456
             'role' => 'admin'
         ]);
+
+        User::create([
+            'name' => null,
+            'nis'  => null,
+            'email' => 'hendri@gmail.com',
+            'password' => Hash::make('123456'), // password: 123456
+            'role' => 'admin'
+        ]);
+
 
         // Santri account
         User::create([
