@@ -101,7 +101,7 @@
                                             </td>
                                             <td>{{ $item->tahun_angkatan }}</td>
                                             <td>
-                                                {{ $item->alhadis >= 1997 ? 'Khatam' : 'Belum Khatam' }}
+                                                {{ $item->alhadis >= 2174 ? 'Khatam' : 'Belum Khatam' }}
                                             </td>
                                             <td>
                                                 {{ $item->alquran >= 606 ? 'Khatam' : 'Belum Khatam' }}

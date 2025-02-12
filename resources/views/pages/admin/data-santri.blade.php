@@ -79,7 +79,7 @@
                                             <td>{{ $item->alquran }}</td>
                                             <td>{{ number_format(($item->alquran / 606) * 100, 2) }}%</td>
                                             <td>{{ $item->alhadis }}</td>
-                                            <td>{{ number_format(($item->alhadis / 1997) * 100, 2) }}%</td>
+                                            <td>{{ number_format(($item->alhadis / 2174) * 100, 2) }}%</td>
                                             <td>{{ number_format($item->nilai_n, 2) }}</td>
                                             <td>{{ $item->status }}</td>
                                             <td>
@@ -165,7 +165,7 @@
                                             <td>{{ $item->alquran }}</td>
                                             <td>{{ number_format(($item->alquran / 606) * 100, 2) }}%</td>
                                             <td>{{ $item->alhadis }}</td>
-                                            <td>{{ number_format(($item->alhadis / 1997) * 100, 2) }}%</td>
+                                            <td>{{ number_format(($item->alhadis / 2174) * 100, 2) }}%</td>
                                             <td>{{ number_format($item->nilai_n, 2) }}</td>
                                             <td>{{ $item->status }}</td>
                                             <td>
@@ -254,7 +254,7 @@
                                             <td>{{ $item->alquran }}</td>
                                             <td>{{ number_format(($item->alquran / 606) * 100, 2) }}%</td>
                                             <td>{{ $item->alhadis }}</td>
-                                            <td>{{ number_format(($item->alhadis / 1997) * 100, 2) }}%</td>
+                                            <td>{{ number_format(($item->alhadis / 2174) * 100, 2) }}%</td>
                                             <td>{{ number_format($item->nilai_n, 2) }}</td>
                                             <td>{{ $item->status }}</td>
                                             <td>

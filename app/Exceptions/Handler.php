@@ -27,4 +27,17 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function render($request, Throwable $exception)
+{
+    if ($exception instanceof \Symfony\Component\HttpKernel\Exception\HttpException) {
+        $statusCode = $exception->getStatusCode();
+        if (view()->exists("errors.{$statusCode}")) {
+            return response()->view("errors.{$statusCode}", [], $statusCode);
+        }
+    }
+
+    return parent::render($request, $exception);
+}
+
 }

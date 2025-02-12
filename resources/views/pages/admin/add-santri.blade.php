@@ -45,16 +45,15 @@
                                             <td>{{ $index + 1 }}</td>
                                             <td>{{ $santri->name }}</td>
                                             <td>{{ $santri->email }}</td>
-                                            <td>{{ $santri->asal_daerah }}</td>
+                                            <td>{{ $santri->asal_daerah == 'dalamProvinsi' ? 'Dalam Daerah' : 'Luar Provinsi' }}</td>
                                             <td>{{ $santri->jenis_kelamin }}</td>
                                             <td>
-                                                <form action="{{ route('santri.delete', $santri->id) }}" method="POST"
-                                                    onsubmit="return confirmDelete({{ $santri->id }})">
+                                                <!-- Tombol Delete dengan Form -->
+                                                <form action="{{ route('santri.delete', $santri->id) }}" method="POST" class="delete-form">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button class="btn btn-danger btn-sm" type="button"
-                                                        onclick="confirmDelete({{ $santri->id }})">
-                                                        <i class='bx bx-trash'></i>
+                                                    <button type="button" class="btn btn-danger btn-sm btn-delete">
+                                                        <i class='bx bx-trash'></i> Hapus
                                                     </button>
                                                 </form>
                                             </td>
@@ -64,16 +63,13 @@
                                 </table>
                             </div>
 
-                            <!-- DataTables CSS & JS -->
-                            <!-- SweetAlert2 CSS & JS -->
-                            <link rel="stylesheet"
-                                href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
-                            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js">
-                            </script>
-                            <link rel="stylesheet"
-                                href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+                            <!-- DataTables & SweetAlert2 -->
+                            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
+                            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+                            <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
                             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                             <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
                             <script>
                                 $(document).ready(function () {
                                     $('#addSantriTable').DataTable({
@@ -91,23 +87,27 @@
                                     });
                                 });
 
-                                function confirmDelete(santriId) {
-                                    Swal.fire({
-                                        title: 'Yakin ingin menghapus Santri ini?',
-                                        text: 'Data yang dihapus tidak bisa dikembalikan!',
-                                        icon: 'warning',
-                                        showCancelButton: true,
-                                        confirmButtonText: 'Ya, hapus!',
-                                        cancelButtonText: 'Batal',
-                                        reverseButtons: true
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            // Submit the form if confirmed
-                                            document.getElementById('deleteSantriForm' + santriId).submit();
-                                        }
+                                document.querySelectorAll('.btn-delete').forEach(button => {
+                                    button.addEventListener('click', function() {
+                                        let form = this.closest('form');
+
+                                        Swal.fire({
+                                            title: 'Yakin ingin menghapus Santri ini?',
+                                            text: 'Data yang dihapus tidak bisa dikembalikan!',
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonText: 'Ya, hapus!',
+                                            cancelButtonText: 'Batal',
+                                            reverseButtons: true
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                form.submit();
+                                            }
+                                        });
                                     });
-                                }
+                                });
                             </script>
+
                         </div>
                     </div>
                 </div>

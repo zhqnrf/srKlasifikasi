@@ -13,10 +13,36 @@
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
+    .time-text{
+        color:#012970;
+    }
+
     .verification-card .card-icon {
         width: 50px;
         height: 50px;
         background-color: #ffc107;
+        color: white;
+        font-size: 1.8rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+
+
+    .estimation-card {
+        background-color: #f8f9fa;
+        border-left: 5px solid #8B07FFFF;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .estimation-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .estimation-card .card-icon {
+        width: 50px;
+        height: 50px;
+        background-color: #8B07FFFF;
         color: white;
         font-size: 1.8rem;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -91,6 +117,40 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-12">
+            <div class="card info-card estimation-card">
+                <div class="card-body">
+                    <h5 class="card-title">Estimasi Lulus</h5>
+                    <div class="d-flex align-items-center">
+                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <i class='bx bx-calendar-check'></i>
+                        </div>
+                        <div class="ps-3">
+                            @php
+                            $totalHalaman = 2780;
+                            $halamanDikerjakan = $latestRiwayat ? ($latestRiwayat->alquran + $latestRiwayat->alhadis) : 0;
+                            $sisaHalaman = max(0, $totalHalaman - $halamanDikerjakan);
+                            $targetPerHari = 2.38;
+                            $estimasiHari = ceil($sisaHalaman / $targetPerHari);
+                            $estimasiTanggal = now()->addDays($estimasiHari)->format('d-m-Y');
+                            @endphp
+
+                            @if($halamanDikerjakan >= $totalHalaman)
+                            <h4 class=" fw-bold time-text">Sudah Lulus 🎉</h4>
+                            @else
+                            <h4 class="fw-bold time-text">
+                                {{ $estimasiHari }} Hari Lagi
+                            </h4>
+                            <p class="text-muted">Perkiraan <b>{{ $estimasiTanggal }}</b></p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Akhir Kartu Estimasi Lulus -->
+
 
         <div class="col-12 dashboard">
             <div class="row">

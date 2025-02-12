@@ -36,7 +36,7 @@ $user = Auth::user();
                                     </tr>
                                     <tr>
                                         <td><i class="bi bi-book-half text-warning"></i> <b>Hadis</b></td>
-                                        <td>1997 Halaman</td>
+                                        <td>2174 Halaman</td>
                                     </tr>
                                 </tbody>
                             </table>

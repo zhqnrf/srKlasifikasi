@@ -31,7 +31,7 @@ class HitungController extends Controller
         $request->validate([
             'year'    => 'required|integer',
             'alquran' => 'required|integer|min:0|max:606',   // maksimal 606 halaman
-            'alhadis' => 'required|integer|min:0|max:1997',  // maksimal 1997 halaman
+            'alhadis' => 'required|integer|min:0|max:2174',  // maksimal 2174 halaman
         ]);
 
         // Buat objek Carbon dari "1 Januari [tahun angkatan]"
@@ -46,19 +46,19 @@ class HitungController extends Controller
         $n = 0;
         $status = 'Tidak Tercapai';
 
-        // 1) Jika jumlah halaman (y) >= 2603, langsung "Tercapai"
-        if ($y >= 2603) {
+        // 1) Jika jumlah halaman (y) >= 2780, langsung "Tercapai"
+        if ($y >= 2780) {
             $n = 100;  // Anda dapat mengganti nilai sesuai kebutuhan
             $status = 'Tercapai';
         }
-        // 2) Jika y < 2603 dan x > 0, hitung kecepatan pencapaian
+        // 2) Jika y < 2780 dan x > 0, hitung kecepatan pencapaian
         elseif ($x > 0) {
             $userSpeed   = $y / $x;
-            $targetSpeed = 2603 / 1095;
+            $targetSpeed = 2780 / 1095;
             $n = ($userSpeed / $targetSpeed) * 100;
             $status = $n >= 100 ? 'Tercapai' : 'Tidak Tercapai';
         }
-        // 3) Jika x == 0 dan y < 2603, nilai default tetap 0 dengan status "Tidak Tercapai"
+        // 3) Jika x == 0 dan y < 2780, nilai default tetap 0 dengan status "Tidak Tercapai"
 
         // Simpan data ke database
         Riwayat::create([

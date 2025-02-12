@@ -1,7 +1,7 @@
 @extends('layouts.app-none')
 <title>Login | SR Klasifikasi</title>
 @section('content')
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
     <div class="container">
         <div class="row justify-content-center">

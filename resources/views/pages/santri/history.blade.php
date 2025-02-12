@@ -23,7 +23,33 @@
                         {{ session('success') }}
                     </div>
                     @endif
-
+                    <div class="col-12 d-md-flex gap-2">
+                        <div class="col-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">Perkembangan Capaian</h5>
+                                    <div id="chartNilaiN" style="height: 350px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">Perkembangan Al-Qur'an</h5>
+                                    <div id="chartQuran" style="height: 350px;"></div>
+                                </div>
+                            </div>
+        
+                        </div>
+                        <div class="col-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">Perkembangan Al-Hadis</h5>
+                                    <div id="chartHadis" style="height: 350px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Riwayat Hitung</h5>
@@ -173,6 +199,37 @@
          $('#sendForm').attr('action', '/santri/riwayat/' + id + '/send');
          // Tampilkan modal
          $('#sendModal').modal('show');
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var categories = {!! json_encode($riwayat->pluck('created_at')->map(function($date) { return \Carbon\Carbon::parse($date)->format('Y-m-d'); })->toArray()) !!};
+
+        // Grafik Perkembangan Al-Qur'an
+        new ApexCharts(document.querySelector("#chartQuran"), {
+            chart: { type: 'area', height: 350, zoom: { enabled: true } },
+            colors: ['#007bff'], 
+            series: [{ name: "Al-Qur'an", data: {!! json_encode($riwayat->pluck('alquran')->toArray()) !!} }],
+            xaxis: { categories: categories},
+            yaxis: { title: { text: 'Jumlah Halaman' } }
+        }).render();
+
+        // Grafik Perkembangan Al-Hadis
+        new ApexCharts(document.querySelector("#chartHadis"), {
+            chart: { type: 'area', height: 350, zoom: { enabled: true } },
+            colors: ['#28a745'],
+            series: [{ name: "Al-Hadis", data: {!! json_encode($riwayat->pluck('alhadis')->toArray()) !!} }],
+            xaxis: { categories: categories},
+            yaxis: { title: { text: 'Jumlah Hadis' } }
+        }).render();
+
+        // Grafik Perkembangan Nilai N
+        new ApexCharts(document.querySelector("#chartNilaiN"), {
+            chart: { type: 'area', height: 350, zoom: { enabled: true } },
+            colors: ['#ffc107'],
+            series: [{ name: "Nilai N", data: {!! json_encode($riwayat->pluck('nilai_n')->map(function($value) { return number_format($value, 2); })->toArray()) !!} }],
+            xaxis: { categories: categories},
+            yaxis: { title: { text: 'Nilai' } }
+        }).render();
     });
 </script>
 @endsection

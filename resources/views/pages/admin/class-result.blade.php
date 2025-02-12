@@ -92,9 +92,9 @@
                                         @endif
                                     </td>
                                     <td>{{ $item->tahun_angkatan }}</td>
-                                    <td>{{ number_format(($item->alhadis / 1997) * 100, 2) }}%</td>
+                                    <td>{{ number_format(($item->alhadis / 2174) * 100, 2) }}%</td>
                                     <td>{{ number_format(($item->alquran / 606) * 100, 2) }}%</td>
-                                    <td>{{ number_format(((($item->alhadis / 1997) * 100) + (($item->alquran / 606) *
+                                    <td>{{ number_format(((($item->alhadis / 2174) * 100) + (($item->alquran / 606) *
                                         100)) / 2, 2) }}%</td>
                                     <td>{{ $item->status }}</td>
                                     <td>

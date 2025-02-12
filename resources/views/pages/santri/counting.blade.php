@@ -49,8 +49,8 @@
                                 name="alquran" value="{{ old('alquran') }}" max="606" required>
                         </div>
                         <div class="col-md-6">
-                            <input type="number" class="form-control" placeholder="Jumlah Al-Hadis Isi : Max 1997"
-                                name="alhadis" value="{{ old('alhadis') }}" max="1997" required>
+                            <input type="number" class="form-control" placeholder="Jumlah Al-Hadis Isi : Max 2174"
+                                name="alhadis" value="{{ old('alhadis') }}" max="2174" required>
                         </div>
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary">Hitung & Simpan</button>
@@ -83,7 +83,7 @@
                                 <td>{{ $latest->alhadis }}</td>
                             </tr>
                             <tr>
-                                <th><i class="bx bx-line-chart"></i> Nilai (n)</th>
+                                <th><i class="bx bx-line-chart"></i>Angka Capaian</th>
                                 <td>
                                     <strong>
                                         {{ number_format($latest->nilai_n, 2) }}%
@@ -97,11 +97,11 @@
                             $now = \Carbon\Carbon::today();
                             $x = $start->diffInDays($now);
                             $y = $latest->alquran + $latest->alhadis;
-                            $targetSpeed = 2603 / 1095;
+                            $targetSpeed = 2780 / 1095;
 
                             // Hitung nilai kecepatan (nCheck) sebagai persentase
                             $nCheck = 0;
-                            if ($y >= 2603) {
+                            if ($y >= 2780) {
                             $nCheck = 100;
                             } elseif ($x > 0) {
                             $userSpeed = $y / $x;
@@ -111,7 +111,7 @@
                             // Tentukan status detail untuk target keseluruhan
                             $detailStatus = '';
                             $badgeClass = '';
-                            if ($y >= 2603) {
+                            if ($y >= 2780) {
                             $detailStatus = "Sesuai Target (Halaman penuh)";
                             $badgeClass = 'bg-success';
                             } elseif ($x == 0) {
@@ -132,19 +132,10 @@
 
                                 // Hitung kekurangan halaman untuk Quran dan Hadis
                                 $quranShort = $latest->alquran < 606 ? (606 - $latest->alquran) : 0;
-                                    $hadisShort = $latest->alhadis < 1997 ? (1997 - $latest->alhadis) : 0;
+                                    $hadisShort = $latest->alhadis < 2174 ? (2174 - $latest->alhadis) : 0;
                                         $quranStatus = $latest->alquran >= 606 ? 'Khatam' : 'Belum Khatam';
-                                        $hadisStatus = $latest->alhadis >= 1997 ? 'Khatam' : 'Belum Khatam';
+                                        $hadisStatus = $latest->alhadis >= 2174 ? 'Khatam' : 'Belum Khatam';
                                         @endphp
-
-                                        <tr>
-                                            <th><i class="bx bx-info-circle"></i> Status Detail</th>
-                                            <td>
-                                                <span class="badge {{ $badgeClass }}">
-                                                    {{ $detailStatus }}
-                                                </span>
-                                            </td>
-                                        </tr>
 
                                         {{-- Kolom tambahan: Status Quran --}}
                                         <tr>
@@ -173,6 +164,38 @@
                                                 @endif
                                             </td>
                                         </tr>
+                                        
+                                        @php
+                                        $totalHalaman = 2780;
+                                        $halamanDikerjakan = $latest->alquran + $latest->alhadis;
+                                        $sisaHalaman = max(0, $totalHalaman - $halamanDikerjakan);
+                                        $targetPerHari = 2.38;
+                                        $estimasiHari = ceil($sisaHalaman / $targetPerHari);
+
+                                        // Estimasi tanggal lulus
+                                        $estimasiTanggal = now()->addDays($estimasiHari)->format('d-m-Y');
+
+                                        $statusKhatam = $halamanDikerjakan >= $totalHalaman ? "Sudah Khatam" : "Belum Khatam";
+                                        @endphp
+
+                                        <tr>
+                                            <th><i class="bx bx-hourglass"></i> Perkiraan Lulus</th>
+                                            <td>
+                                                <span class="badge bg-primary">
+                                                    {{ $estimasiHari }} hari lagi ({{ $estimasiTanggal }})
+                                                </span>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <th><i class="bx bx-info-circle"></i> Status Detail</th>
+                                            <td>
+                                                <span class="badge {{ $badgeClass }}">
+                                                    {{ $detailStatus }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        
                                         <tr>
                                             <th><i class='bx bx-calculator'></i> Hasil</th>
                                             <td>

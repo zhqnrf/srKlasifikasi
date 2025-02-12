@@ -36,7 +36,7 @@
                         @endif
 
                         <form class="row g-3 needs-validation" action="{{ route('register.post') }}" method="POST"
-                            novalidate id="registerForm">
+                            novalidate>
                             @csrf
                             <div class="col-12">
                                 <label for="nameSantri" class="form-label">Nama</label>
@@ -59,8 +59,8 @@
                             <div class="col-12">
                                 <label for="passwordSantri" class="form-label">Password</label>
                                 <div class="input-group">
-                                    <input type="password" name="password" class="form-control" id="passwordSantri"
-                                        required>
+                                <input type="password" name="password" class="form-control" id="passwordSantri"
+                                    required>
                                     <span class="input-group-text toggle-password" data-target="passwordSantri">
                                         <i class="bx bx-hide"></i>
                                     </span>
@@ -101,7 +101,7 @@
                             </div>
 
                             <div class="col-12">
-                                <button class="btn btn-primary w-100" type="submit">Daftar</button>
+                                <button class="btn btn-primary w-100" type="submit" id="btnRegister" disabled>Daftar</button>
                             </div>
 
                             <div class="col-12 d-flex justify-content-center">
@@ -118,8 +118,31 @@
     </div>
 </section>
 
+<!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const nisInput = document.getElementById("NISSantri");
+        const btnRegister = document.getElementById("btnRegister");
+
+        nisInput.addEventListener("input", function() {
+            let nisValue = this.value.trim();
+
+            if (nisValue.length > 0 && !/^([IA])/i.test(nisValue)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Data Tidak Valid',
+                    confirmButtonColor: '#d33'
+                });
+
+                this.value = "";  // Kosongkan input NIS
+                btnRegister.disabled = true;  // Nonaktifkan tombol daftar
+            } else {
+                btnRegister.disabled = false;  // Aktifkan tombol daftar jika valid
+            }
+        });
+    });
     document.addEventListener("DOMContentLoaded", function () {
         // Show/Hide Password
         document.querySelectorAll(".toggle-password").forEach(button => {
