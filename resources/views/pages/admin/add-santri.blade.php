@@ -45,7 +45,13 @@
                                             <td>{{ $index + 1 }}</td>
                                             <td>{{ $santri->name }}</td>
                                             <td>{{ $santri->email }}</td>
-                                            <td>{{ $santri->asal_daerah == 'dalamProvinsi' ? 'Dalam Daerah' : 'Luar Provinsi' }}</td>
+                                            <td>    @if ($santri->asal_daerah === 'dalamProvinsi')
+                                                Dalam Provinsi
+                                                @elseif ($santri->asal_daerah === 'luarProvinsi')
+                                                Luar Provinsi
+                                                @else
+                                                {{ $santri->asal_daerah }}
+                                                @endif</td>
                                             <td>{{ $santri->jenis_kelamin }}</td>
                                             <td>
                                                 <!-- Tombol Delete dengan Form -->

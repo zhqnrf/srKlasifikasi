@@ -59,7 +59,7 @@ class SantriController extends Controller
         $request->validate([
             'name'        => 'required|string|max:255',
             'email'       => 'required|email|unique:users,email,' . $user->id,
-            'asal_daerah' => 'required|in:dalamProvinsi,luarProvinsi',
+            'asal_daerah' => 'required|in:Dalam Provinsi,Luar Provinsi',
             'password'    => 'nullable|min:6|same:password_confirmation',
         ], [
             'password.same' => 'Konfirmasi password tidak cocok.',

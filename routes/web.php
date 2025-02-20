@@ -84,6 +84,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
         ->name('trainData.delete');
     Route::post('/admin/trainData/reset', [ClassificationController::class, 'resetTrainData'])
         ->name('trainData.reset');
+        Route::get('/trainData/setPercentage', [TestDataController::class, 'setPercentage'])->name('trainData.setPercentage');
     // Exam Data...........................
     Route::get('/admin/testData', [TestDataController::class, 'showTestData'])->name('testData.show');
     Route::post('/admin/testData/classify', [TestDataController::class, 'classifyData'])->name('testData.classify');

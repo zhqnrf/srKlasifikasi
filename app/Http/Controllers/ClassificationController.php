@@ -83,14 +83,6 @@ class ClassificationController extends Controller
 
         return view('pages.admin.class-result'); // Pastikan view ini telah dibuat
     }
-
-
-
-    public function showExamData()
-    {
-        // Tambahkan logika untuk mengolah dan menampilkan hasil klasifikasi
-        // Misalnya, menjalankan algoritma atau mengambil data dari model
-
-        return view('pages.admin.exam-data'); // Pastikan view ini telah dibuat
-    }
 }
+
+

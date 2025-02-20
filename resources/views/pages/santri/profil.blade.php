@@ -64,9 +64,9 @@
                         <div class="col-md-6">
                             <select id="asalDaerah" class="form-select" name="asal_daerah" required>
                                 <option value="" disabled>Pilih Asal Daerah...</option>
-                                <option value="dalamProvinsi" {{ $user->asal_daerah == 'dalamProvinsi' ? 'selected' : ''
+                                <option value="Dalam Provinsi" {{ $user->asal_daerah == 'Dalam Provinsi' ? 'selected' : ''
                                     }}>Dalam Provinsi</option>
-                                <option value="luarProvinsi" {{ $user->asal_daerah == 'luarProvinsi' ? 'selected' : ''
+                                <option value="Luar Provinsi" {{ $user->asal_daerah == 'Luar Provinsi' ? 'selected' : ''
                                     }}>Luar
                                     Provinsi</option>
                             </select>

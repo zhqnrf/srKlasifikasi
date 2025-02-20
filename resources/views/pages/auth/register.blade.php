@@ -94,8 +94,8 @@
                                 <label for="asalDaerah" class="form-label">Asal Daerah</label>
                                 <select class="form-select" name="asal_daerah" id="asalDaerah" required>
                                     <option value="" selected disabled>Pilih Asal Daerah</option>
-                                    <option value="dalamProvinsi">Dalam Provinsi</option>
-                                    <option value="luarProvinsi">Luar Provinsi</option>
+                                    <option value="Dalam Provinsi">Dalam Provinsi</option>
+                                    <option value="Luar Provinsi">Luar Provinsi</option>
                                 </select>
                                 <div class="invalid-feedback">Pilih Asal Daerah Anda</div>
                             </div>
