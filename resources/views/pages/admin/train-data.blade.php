@@ -91,9 +91,9 @@
                                             <td>{{ $item->jenis_kelamin ?? '—' }}</td>
                                             <td>{{ $item->nis ?? '—' }}</td>
                                             <td>
-                                                @if ($item->asal_daerah === 'dalamProvinsi')
+                                                @if ($item->asal_daerah === 'Dalam Provinsi')
                                                 Dalam Provinsi
-                                                @elseif ($item->asal_daerah === 'luarProvinsi')
+                                                @elseif ($item->asal_daerah === 'Luar Provinsi')
                                                 Luar Provinsi
                                                 @else
                                                 {{ $item->asal_daerah }}

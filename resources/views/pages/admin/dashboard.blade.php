@@ -126,6 +126,27 @@
                     </div>
                 </div>
 
+                <div class="col-xxl-6 col-md-6 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">Jenis Kelamin</h5>
+                                    <div id="jenisKelamin"></div>
+                                </div>
+                            </div>
+                        
+                        </div>
+                        
+                        <!-- Grafik Asal Daerah -->
+                        <div class="col-xxl-6 col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">Asal Daerah</h5>
+                                    <div id="asalDaerah"></div>
+                                </div>
+                            </div>
+                        
+                        </div>
+
                 <!-- Tabel Statistik Klasifikasi Berdasarkan Tahun Angkatan -->
                 <div class="col-12">
                     <div class="card">
@@ -158,26 +179,7 @@
                 </div>
 
                 <!-- Grafik Jenis Kelamin -->
-                <div class="col-xxl-6 col-md-6 mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title text-center">Jenis Kelamin</h5>
-                            <div id="jenisKelamin"></div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Grafik Asal Daerah -->
-                <div class="col-xxl-6 col-md-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title text-center">Asal Daerah</h5>
-                            <div id="asalDaerah"></div>
-                        </div>
-                    </div>
-
-                </div>
+        
             </div>
         </div>
     </div>

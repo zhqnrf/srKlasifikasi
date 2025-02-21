@@ -79,7 +79,7 @@ class AuthController extends Controller
             'email'         => 'required|email|unique:users,email',
             'password'      => 'required|min:6',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
-            'asal_daerah'   => 'required|in:dalamProvinsi,luarProvinsi',
+            'asal_daerah'   => 'required|in:Dalam Provinsi,Luar Provinsi',
         ]);
 
         // Buat user baru
