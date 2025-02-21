@@ -277,6 +277,7 @@
                                     <div class="number">{{ number_format($probStatus['Tepat'] ?? 0, 2) }}%</div>
                                     <div class="status-label">Tepat</div>
                                     <small>Sejumlah <b> {{ $totalTercapai }} </b> dari {{ $totalTestData }} data</small>
+                            
                                 </div>
                             </div>
                             <div class="progress mx-auto" style="width: 80%;">
@@ -288,6 +289,7 @@
                         </div>
                     </div>
                 </div>
+
                 <!-- Kartu Terlambat -->
                 <div class="col-md-5">
                     <div class="card status-card bg-danger text-white shadow-lg">
@@ -311,9 +313,32 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center gap-3 p-3 shadow-sm rounded-3 border border-light-subtle">
+                        <i class="bx bxs-check-circle fs-1 text-success"></i>
+                        <div>
+                            <h5 class="mb-1 fw-semibold">Probabilitas Tercapai</h5>
+                            <p class="mb-0 fs-4 text-dark">
+                                {{ $totalTestData > 0 ? number_format($totalTercapai / $totalTestData, 2) : 0 }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center gap-3 p-3 shadow-sm rounded-3 border border-light-subtle">
+                        <i class="bx bxs-x-circle fs-1 text-danger"></i>
+                        <div>
+                            <h5 class="mb-1 fw-semibold">Probabilitas Tidak Tercapai</h5>
+                            <p class="mb-0 fs-4 text-dark">
+                                {{ $totalTestData > 0 ? number_format($totalTidakTercapai / $totalTestData, 2) : 0 }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        
+    
         <div class="container mt-4">
             <div class="row justify-content-center text-center mt-4">
                 <div class="col-12">
