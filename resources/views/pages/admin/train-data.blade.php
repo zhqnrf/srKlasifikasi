@@ -65,27 +65,34 @@
             </div>
         </div>
 
-
-
         <div class="col-lg-12">
             <div class="card shadow-sm border-0">
                 <div class="card-body">
-                    <h5 class="card-title mb-3">Bagi Data </h5>
+                    <h5 class="card-title mb-3">Bagi Data</h5>
                     <div class="row g-2">
                         <div class="col-md-12">
-                            <form action="{{ route('trainData.setPercentage') }}" method="GET"
-                                class="d-flex gap-2 card-body">
+                            <form action="{{ route('trainData.setPercentage') }}" method="GET" class="d-flex gap-2 card-body">
                                 <select name="train_percentage" class="form-select">
-                                    <option value="90" {{ request('train_percentage')==10 ? 'selected' : '' }}>90% Data
-                                        Latih 10% Data Uji</option>
-                                    <option value="80" {{ request('train_percentage')==80 ? 'selected' : '' }}>80% Data
-                                        Latih 20% Data Uji</option>
-                                    <option value="70" {{ request('train_percentage')==70 ? 'selected' : '' }}>70% Data
-                                        Latih 30% Data Uji</option>
-                                    <option value="60" {{ request('train_percentage')==60 ? 'selected' : '' }}>60% Data
-                                        Latih 40% Data Uji</option>
-                                    <option value="50" {{ request('train_percentage')==50 ? 'selected' : '' }}>50% Data
-                                        Latih 50% Data Uji</option>
+                                    <option value="90" {{ request('train_percentage')==90 ? 'selected' : '' }}>90% Data Latih
+                                        10% Data Uji</option>
+                                    <option value="80" {{ request('train_percentage')==80 ? 'selected' : '' }}>80% Data Latih
+                                        20% Data Uji</option>
+                                    <option value="70" {{ request('train_percentage')==70 ? 'selected' : '' }}>70% Data Latih
+                                        30% Data Uji</option>
+                                    <option value="60" {{ request('train_percentage')==60 ? 'selected' : '' }}>60% Data Latih
+                                        40% Data Uji</option>
+                                    <option value="50" {{ request('train_percentage')==50 ? 'selected' : '' }}>50% Data Latih
+                                        50% Data Uji</option>
+                                    <option value="40" {{ request('train_percentage')==40 ? 'selected' : '' }}>40% Data Latih
+                                        60% Data Uji</option>
+                                    <option value="30" {{ request('train_percentage')==30 ? 'selected' : '' }}>30% Data Latih
+                                        70% Data Uji</option>
+                                    <option value="20" {{ request('train_percentage')==20 ? 'selected' : '' }}>20% Data Latih
+                                        80% Data Uji</option>
+                                    <option value="10" {{ request('train_percentage')==10 ? 'selected' : '' }}>10% Data Latih
+                                        90% Data Uji</option>
+                                    <option value="0" {{ request('train_percentage')==0 ? 'selected' : '' }}>100% Data Uji
+                                    </option>
                                 </select>
                                 <button type="submit" class="btn btn-primary">
                                     <i class="bx bxs-mouse-alt me-1"></i> Terapkan

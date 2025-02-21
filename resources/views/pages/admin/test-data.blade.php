@@ -99,7 +99,16 @@
         background-color: #fff;
     }
 </style>
-
+@if($errors->any())
+<script>
+    Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: "{{ $errors->first() }}",
+            confirmButtonColor: '#d33'
+        });
+</script>
+@endif
 <main id="main" class="main">
     <div class="row">
         <div class="pagetitle d-flex justify-content-between align-items-center">
@@ -112,43 +121,123 @@
                 <li class="breadcrumb-item active">Data Uji</li>
             </ol>
         </nav>
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card p-4 shadow-sm text-center border-0 hover-card">
-                    <div class="d-flex align-items-center gap-3">
-                        <i class="bx bxs-bar-chart-alt-2 fs-1 text-primary"></i>
-                        <div>
-                            <h5 class="mb-1 fw-semibold">Data Latih</h5>
-                            <p class="mb-0 fs-4 text-dark">{{ $trainPercentage }}%</p>
-                        </div>
+        <div class="col-12">
+            <div class="row text-white justify-content-center">
+                <div class="col-md-6 ">
+                    <div class="card card-main bg-info">
+                        <i class="bx bxs-bar-chart-alt-2 fs-1  custom-icon text-white"></i>
+                        <h3 class="mb-0 text-white fs-4 ">{{ $trainPercentage }}%</h3>
+                        <h6 style="color: #fff">Data Latih</h6>
                     </div>
                 </div>
+            
+                <!-- Precision -->
+                <div class="col-md-6">
+                    <div class="card card-main bg-success">
+                        <i class="bx bxs-flask fs-1 custom-icon text-white "></i>
+                        <h3 class="mb-0 text-white fs-4 ">{{ $testPercentage }}%</h3>
+                        <h6 style="color: #fff">Data Uji</h6>
+                    </div>
+                </div>
+            
             </div>
-            <div class="col-md-6">
-                <div class="card p-4 shadow-sm text-center border-0 hover-card">
-                    <div class="d-flex align-items-center gap-3">
-                        <i class="bx bxs-flask fs-1 text-danger"></i>
-                        <div>
-                            <h5 class="mb-1 fw-semibold">Data Uji</h5>
-                            <p class="mb-0 fs-4 text-dark">{{ $testPercentage }}%</p>
-                        </div>
+        </div>
+            <div class="col-12">
+            <div class="row">
+                <div class="row justify-content-center text-center mt-4">
+                    <div class="col-12">
+                        <h2 class="status-title">Jumlah Data</h2>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="card card-main">
+                        <i class="bx bx-data custom-icon data-icon"></i>
+                        <h3>{{$totalTestData}}</h3>
+
+                        <h6>Data yang di Uji</h6>
+                        <p>Diambil dari sejumlah {{ $totalTrainData }} dengan presentase {{ $testPercentage }}% data
+                            latih</p>
                     </div>
                 </div>
             </div>
         </div>
-        
+        <div class="col-12">
+            <div class="row justify-content-center text-center mt-4">
+                <div class="col-12">
+                    <h2 class="status-title">Confusion Matrix</h2>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Akurasi -->
+                <div class="col-md-4">
+                    <div class="card card-main">
+                        <i class="bx bx-bar-chart-alt-2 custom-icon accuracy-icon"></i>
+                        <h3>{{ number_format($accuracy, 2) }}%</h3>
+                        <h6>Akurasi Model</h6>
+                    </div>
+                </div>
+
+                <!-- Precision -->
+                <div class="col-md-4">
+                    <div class="card card-main">
+                        <i class="bx bx-target-lock custom-icon data-icon"></i>
+                        <h3>{{ number_format($precision, 2) }}%</h3>
+                        <h6>Precision</h6>
+                    </div>
+                </div>
+
+                <!-- Recall -->
+                <div class="col-md-4">
+                    <div class="card card-main">
+                        <i class="bx bx-refresh custom-icon data-icon"></i>
+                        <h3>{{ number_format($recall, 2) }}%</h3>
+                        <h6>Recall</h6>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Baris Baru untuk TP, FP, FN -->
+            <div class="row mt-3">
+                <!-- True Positive (TP) -->
+                <div class="col-md-4">
+                    <div class="card card-main">
+                        <i class="bx bx-check-circle custom-icon tp-icon"></i>
+                        <h3>{{ number_format($TP) }}</h3>
+                        <h6>True Positive (TP)</h6>
+                    </div>
+                </div>
+
+                <!-- False Positive (FP) -->
+                <div class="col-md-4">
+                    <div class="card card-main">
+                        <i class="bx bx-x-circle custom-icon fp-icon"></i>
+                        <h3>{{ number_format($FP) }}</h3>
+                        <h6>False Positive (FP)</h6>
+                    </div>
+                </div>
+
+                <!-- False Negative (FN) -->
+                <div class="col-md-4">
+                    <div class="card card-main">
+                        <i class="bx bx-error custom-icon fn-icon"></i>
+                        <h3>{{ number_format($FN) }}</h3>
+                        <h6>False Negative (FN)</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
         <style>
             .hover-card {
                 transition: transform 0.3s ease, box-shadow 0.3s ease;
             }
+
             .hover-card:hover {
                 transform: translateY(-5px);
                 box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
             }
         </style>
-        
-{{--         
+
+        {{--
         <div class="col-lg-12">
             <div class="card shadow-sm border-0">
                 <div class="card-body">
@@ -157,10 +246,14 @@
                         <div class="col-md-10">
                             <form action="{{ route('testData.show') }}" method="GET" class="d-flex gap-2">
                                 <select name="test_percentage'" class="form-select">
-                                    <option value="100" {{ request('test_percentage')==100 ? 'selected' : '' }}>100%</option>
-                                    <option value="75" {{ request('test_percentage')==75 ? 'selected' : '' }}>75%</option>
-                                    <option value="50" {{ request('test_percentage')==50 ? 'selected' : '' }}>50%</option>
-                                    <option value="25" {{ request('test_percentage')==25 ? 'selected' : '' }}>25%</option>
+                                    <option value="100" {{ request('test_percentage')==100 ? 'selected' : '' }}>100%
+                                    </option>
+                                    <option value="75" {{ request('test_percentage')==75 ? 'selected' : '' }}>75%
+                                    </option>
+                                    <option value="50" {{ request('test_percentage')==50 ? 'selected' : '' }}>50%
+                                    </option>
+                                    <option value="25" {{ request('test_percentage')==25 ? 'selected' : '' }}>25%
+                                    </option>
                                 </select>
                                 <button type="submit" class="btn btn-primary">
                                     <i class="bx bxs-mouse-alt me-1"></i> Terapkan
@@ -179,26 +272,6 @@
                 </div>
             </div>
         </div> --}}
-        
-        <!-- Kartu Statistik -->
-        <div class="col-12">
-            <div class="row">
-                <div class="row justify-content-center text-center mt-4">
-                    <div class="col-12">
-                        <h2 class="status-title">Jumlah Data</h2>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="card card-main">
-                        <i class="bx bx-data custom-icon data-icon"></i>
-                        <h3>{{$totalTestData}}</h3>
-                    
-                        <h6>Data yang di Uji</h6>
-                        <p>Diambil dari sejumlah {{ $totalTrainData }} dengan presentase {{ $testPercentage }}% data latih</p>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div class="container mb-0">
             <!-- Judul -->
@@ -239,7 +312,8 @@
                                 <div class="text-start">
                                     <div class="number">{{ number_format($probStatus['Terlambat'] ?? 0, 2) }}%</div>
                                     <div class="status-label">Terlambat</div>
-                                    <small>Sejumlah <b> {{ $totalTidakTercapai }} </b> dari {{ $totalTestData }} data</small>
+                                    <small>Sejumlah <b> {{ $totalTidakTercapai }} </b> dari {{ $totalTestData }}
+                                        data</small>
                                 </div>
                             </div>
                             <div class="progress mx-auto" style="width: 80%;">
@@ -261,7 +335,7 @@
                     <h2 class="status-title">Probabilitas Atribut Numerik</h2>
                 </div>
             </div>
-        
+
             <div class="row justify-content-center">
                 <!-- Probabilitas Capaian Al-Qur'an -->
                 <div class="col-md-4">
@@ -276,7 +350,8 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 <p class="small text-muted mb-1">Tercapai</p>
-                                <p class="fw-bold fs-5 ">{{ number_format($probNumerik['alquran']['Tercapai']['mean'], 2) }}</p>
+                                <p class="fw-bold fs-5 ">{{ number_format($probNumerik['alquran']['Tercapai']['mean'],
+                                    2) }}</p>
                             </div>
                             <div>
                                 <p class="small text-muted mb-1">Tidak Tercapai</p>
@@ -288,7 +363,8 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 <p class="small text-muted mb-1">Tercapai</p>
-                                <p class="fw-bold fs-6 ">{{ number_format($probNumerik['alquran']['Tercapai']['std_dev'], 2) }}</p>
+                                <p class="fw-bold fs-6 ">{{
+                                    number_format($probNumerik['alquran']['Tercapai']['std_dev'], 2) }}</p>
                             </div>
                             <div>
                                 <p class="small text-muted mb-1">Tidak Tercapai</p>
@@ -297,7 +373,7 @@
                         </div>
                     </div>
                 </div>
-        
+
                 <!-- Probabilitas Capaian Al-Hadis -->
                 <div class="col-md-4">
                     <div class="card shadow-sm border-0 text-center p-3">
@@ -311,7 +387,8 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 <p class="small text-muted mb-1">Tercapai</p>
-                                <p class="fw-bold fs-5 ">{{ number_format($probNumerik['alhadis']['Tercapai']['mean'], 2) }}</p>
+                                <p class="fw-bold fs-5 ">{{ number_format($probNumerik['alhadis']['Tercapai']['mean'],
+                                    2) }}</p>
                             </div>
                             <div>
                                 <p class="small text-muted mb-1">Tidak Tercapai</p>
@@ -323,7 +400,8 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 <p class="small text-muted mb-1">Tercapai</p>
-                                <p class="fw-bold fs-6 ">{{ number_format($probNumerik['alhadis']['Tercapai']['std_dev'], 2) }}</p>
+                                <p class="fw-bold fs-6 ">{{
+                                    number_format($probNumerik['alhadis']['Tercapai']['std_dev'], 2) }}</p>
                             </div>
                             <div>
                                 <p class="small text-muted mb-1">Tidak Tercapai</p>
@@ -332,7 +410,7 @@
                         </div>
                     </div>
                 </div>
-        
+
                 <!-- Probabilitas Tahun Angkatan -->
                 <div class="col-md-4">
                     <div class="card shadow-sm border-0 text-center p-3">
@@ -346,11 +424,13 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 <p class="small text-muted mb-1">Tercapai</p>
-                                <p class="fw-bold fs-5 ">{{ number_format($probNumerik['tahun_angkatan']['Tercapai']['mean'], 2) }}</p>
+                                <p class="fw-bold fs-5 ">{{
+                                    number_format($probNumerik['tahun_angkatan']['Tercapai']['mean'], 2) }}</p>
                             </div>
                             <div>
                                 <p class="small text-muted mb-1">Tidak Tercapai</p>
-                                <p class="fw-bold fs-5 text-danger">{{ number_format($probNumerik['tahun_angkatan']['Tidak Tercapai']['mean'], 2) }}</p>
+                                <p class="fw-bold fs-5 text-danger">{{
+                                    number_format($probNumerik['tahun_angkatan']['Tidak Tercapai']['mean'], 2) }}</p>
                             </div>
                         </div>
                         <hr class="my-2">
@@ -358,20 +438,22 @@
                         <div class="d-flex justify-content-between">
                             <div>
                                 <p class="small text-muted mb-1">Tercapai</p>
-                                <p class="fw-bold fs-6 ">{{ number_format($probNumerik['tahun_angkatan']['Tercapai']['std_dev'], 2) }}</p>
+                                <p class="fw-bold fs-6 ">{{
+                                    number_format($probNumerik['tahun_angkatan']['Tercapai']['std_dev'], 2) }}</p>
                             </div>
                             <div>
                                 <p class="small text-muted mb-1">Tidak Tercapai</p>
-                                <p class="fw-bold fs-6 text-danger">{{ number_format($probNumerik['tahun_angkatan']['Tidak Tercapai']['std_dev'], 2) }}</p>
+                                <p class="fw-bold fs-6 text-danger">{{
+                                    number_format($probNumerik['tahun_angkatan']['Tidak Tercapai']['std_dev'], 2) }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
-        
-        
+
+
+
         <div class="container mt-4">
             <div class="row justify-content-center text-center mt-4">
                 <div class="col-12">
@@ -384,9 +466,9 @@
                     <div class="card">
                         <div class="card-header bg-danger text-white">
                             <h5 class="align-items-center d-flex fw-bold" style="margin-bottom: 0"><i
-                                class="bx bx-universal-access me-2"></i> Jenis
-                            Kelamin
-                        </h5>
+                                    class="bx bx-universal-access me-2"></i> Jenis
+                                Kelamin
+                            </h5>
                         </div>
                         <div class="card-body">
                             <table class="table">
@@ -400,28 +482,36 @@
                                 <tbody>
                                     <tr>
                                         <td>Tercapai</td>
-                                        <td>{{ number_format($probKelamin['Tercapai']['Laki-laki']['probability'] * 100, 2) }}% ({{ $probKelamin['Tercapai']['Laki-laki']['count'] }}/{{ $totalTercapai }})</td>
-                                        <td>{{ number_format($probKelamin['Tercapai']['Perempuan']['probability'] * 100, 2) }}% ({{ $probKelamin['Tercapai']['Perempuan']['count'] }}/{{ $totalTercapai }})</td>
-                                                
+                                        <td>{{ number_format($probKelamin['Tercapai']['Laki-laki']['probability'] * 100,
+                                            2) }}% ({{ $probKelamin['Tercapai']['Laki-laki']['count'] }}/{{
+                                            $totalTercapai }})</td>
+                                        <td>{{ number_format($probKelamin['Tercapai']['Perempuan']['probability'] * 100,
+                                            2) }}% ({{ $probKelamin['Tercapai']['Perempuan']['count'] }}/{{
+                                            $totalTercapai }})</td>
+
                                     </tr>
                                     <tr>
                                         <td>Tidak Tercapai</td>
-                                        <td>{{ number_format($probKelamin['Tidak Tercapai']['Laki-laki']['probability'] * 100, 2) }}% ({{ $probKelamin['Tidak Tercapai']['Laki-laki']['count'] }}/{{ $totalTidakTercapai }})</td>
-                                        <td>{{ number_format($probKelamin['Tidak Tercapai']['Perempuan']['probability'] * 100, 2) }}% ({{ $probKelamin['Tidak Tercapai']['Perempuan']['count'] }}/{{ $totalTidakTercapai }})</td>
+                                        <td>{{ number_format($probKelamin['Tidak Tercapai']['Laki-laki']['probability']
+                                            * 100, 2) }}% ({{ $probKelamin['Tidak Tercapai']['Laki-laki']['count'] }}/{{
+                                            $totalTidakTercapai }})</td>
+                                        <td>{{ number_format($probKelamin['Tidak Tercapai']['Perempuan']['probability']
+                                            * 100, 2) }}% ({{ $probKelamin['Tidak Tercapai']['Perempuan']['count'] }}/{{
+                                            $totalTidakTercapai }})</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-        
+
                 <!-- Probabilitas Asal Daerah -->
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header bg-primary text-white">
                             <h5 class="align-items-center d-flex fw-bold" style="margin-bottom: 0"><i
-                                class="bx bx-buildings me-2"></i> Asal Daerah
-                        </h5>
+                                    class="bx bx-buildings me-2"></i> Asal Daerah
+                            </h5>
                         </div>
                         <div class="card-body">
                             <table class="table">
@@ -435,9 +525,13 @@
                                 <tbody>
                                     <tr>
                                         <td>Tercapai</td>
-                                        <td>{{ number_format($probProvinsi['Tercapai']['Dalam Provinsi']['probability'] * 100, 2) }}% ({{ $probProvinsi['Tercapai']['Dalam Provinsi']['count'] }}/{{ $totalTercapai }})</td>
-                                        <td>{{ number_format($probProvinsi['Tercapai']['Luar Provinsi']['probability'] * 100, 2) }}% ({{ $probProvinsi['Tercapai']['Luar Provinsi']['count'] }}/{{ $totalTercapai }})</td>
-                                        
+                                        <td>{{ number_format($probProvinsi['Tercapai']['Dalam Provinsi']['probability']
+                                            * 100, 2) }}% ({{ $probProvinsi['Tercapai']['Dalam Provinsi']['count'] }}/{{
+                                            $totalTercapai }})</td>
+                                        <td>{{ number_format($probProvinsi['Tercapai']['Luar Provinsi']['probability'] *
+                                            100, 2) }}% ({{ $probProvinsi['Tercapai']['Luar Provinsi']['count'] }}/{{
+                                            $totalTercapai }})</td>
+
                                     </tr>
                                     <tr>
                                         <td>Tidak Tercapai</td>
@@ -451,7 +545,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="container">
             <div class="row justify-content-center text-center mt-4">
                 <div class="col-12">
@@ -479,13 +573,17 @@
                                 <tbody>
                                     <tr>
                                         <td>Dalam Provinsi</td>
-                                        <td>{{ number_format($probRegion['Dalam Provinsi']['probability'] ?? 0, 2) }}%</td>
-                                        <td>{{ number_format($peluangRegion['Dalam Provinsi']['peluang'] ?? 0, 2) }}%</td>
+                                        <td>{{ number_format($probRegion['Dalam Provinsi']['probability'] ?? 0, 2) }}%
+                                        </td>
+                                        <td>{{ number_format($peluangRegion['Dalam Provinsi']['peluang'] ?? 0, 2) }}%
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>Luar Provinsi</td>
-                                        <td>{{ number_format($probRegion['Luar Provinsi']['probability'] ?? 0, 2) }}%</td>
-                                        <td>{{ number_format($peluangRegion['Luar Provinsi']['peluang'] ?? 0, 2) }}%</td>
+                                        <td>{{ number_format($probRegion['Luar Provinsi']['probability'] ?? 0, 2) }}%
+                                        </td>
+                                        <td>{{ number_format($peluangRegion['Luar Provinsi']['peluang'] ?? 0, 2) }}%
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -546,8 +644,8 @@
                             <i class='bx bx-file'></i> Export Excel
                         </button>
                     </div>
-        
-                   <div class="table-responsive">
+
+                    <div class="table-responsive">
                         <table id="dataTable" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
@@ -593,47 +691,13 @@
                             </tbody>
                         </table>
                     </div>
-                
+
                 </div>
             </div>
         </div>
 
-        <div class="col-12">
-            <div class="row justify-content-center text-center mt-4">
-                <div class="col-12">
-                    <h2 class="status-title">Conffusion Matrix</h2>
-                </div>
-            </div>
-            <div class="row">
-                <!-- Akurasi -->
-                <div class="col-md-4">
-                    <div class="card card-main">
-                        <i class="bx bx-bar-chart-alt-2 custom-icon accuracy-icon"></i>
-                        <h3>{{ number_format($accuracy, 2) }}%</h3>
-                        <h6>Akurasi Model</h6>
-                    </div>
-                </div>
-        
-                <!-- Precision -->
-                <div class="col-md-4">
-                    <div class="card card-main">
-                        <i class="bx bx-target-lock custom-icon data-icon"></i>
-                        <h3>{{ number_format($precision, 2) }}%</h3>
-                        <h6>Precision</h6>
-                    </div>
-                </div>
-        
-                <!-- Recall -->
-                <div class="col-md-4">
-                    <div class="card card-main">
-                        <i class="bx bx-refresh custom-icon data-icon"></i>
-                        <h3>{{ number_format($recall, 2) }}%</h3>
-                        <h6>Recall</h6>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
+
+
     </div>
 </main>
 
@@ -648,7 +712,7 @@
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-        
+
 <script>
     $(document).ready(function () {
         var table = $('#dataTable').DataTable({

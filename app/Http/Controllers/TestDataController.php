@@ -10,81 +10,68 @@ use Phpml\Classification\NaiveBayes;
 
 class TestDataController extends Controller
 {
+    
+
     public function showTestData(Request $request)
     {
         $trainPercentage = $request->input('train_percentage', 80); // Default 80%
         $testPercentage = 100 - $trainPercentage;
-        $totalTrainData = TrainData::count();
+
+        $totalTrainData = TrainData::count();  // Total data latih
         $trainLimit = round(($trainPercentage / 100) * $totalTrainData);
-        $testLimit = round(($testPercentage / 100) * $totalTrainData);
-        // **Hapus semua data uji sebelum insert baru**
-        TestData::query()->delete();
+        $testLimit = round(($testPercentage / 100) * $totalTrainData);  // Total data uji
 
-        // **Ambil data latih acak sesuai persentase**
-        $trainData = TrainData::inRandomOrder()->limit($trainLimit)->get();
-
-        // **Gunakan array untuk memastikan NIS unik**
-        $existingNIS = [];
-
-        foreach ($trainData as $data) {
-            if (!in_array($data->nis, $existingNIS)) {
-                TestData::create([
-                    'nama' => $data->nama,
-                    'jenis_kelamin' => $data->jenis_kelamin,
-                    'nis' => $data->nis,
-                    'asal_daerah' => $data->asal_daerah,
-                    'tahun_angkatan' => $data->tahun_angkatan,
-                    'alquran' => $data->alquran,
-                    'alhadis' => $data->alhadis,
-                    'status' => $data->status,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-                $existingNIS[] = $data->nis;
-            }
-        }
-
+        
+        // $totalTrainData = TrainData::count();
+        dump($totalTrainData);
+        // $trainLimit = round(($trainPercentage / 100) * $totalTrainData);
+        // $testLimit = round(($testPercentage / 100) * $totalTrainData);
+        dump($testLimit);
+        // Ambil data latih sesuai dengan persentase yang dikirim
+        $trainData = TrainData::inRandomOrder()->limit($trainLimit)->get(); // Ambil data latih sesuai persentase
+        dump($trainData);
+        // Ambil data uji sesuai dengan sisa data setelah pengambilan data latih
+        $testData = TestData::inRandomOrder()->limit($testLimit)->get();  // Ambil data uji sesuai limit
+    
         // **Jalankan klasifikasi otomatis**
-        // Ganti pemanggilan classifyData() seperti ini
-        $this->classifyData($request);
-
-
-        $testData = TestData::limit($testLimit)->get();
+        $this->classifyData($trainData, $testData);
         $totalTestData = $testData->count();
+        dump($totalTestData);
+        // Total Test Data
+        dd($testData);
 
-
-        // **Hitung Akurasi**
+        // Akurasi dan Evaluasi
         $correctPredictions = $testData->filter(function ($item) {
             return $item->status === $item->predicted_status;
         })->count();
 
         $accuracy = ($totalTestData > 0) ? ($correctPredictions / max(1, $totalTestData)) * 100 : 0;
 
-        // **Hitung True Positive, False Positive, dan False Negative**
+        // Hitung TP, FP, FN, Precision, Recall, dan Probabilitas
         $TP = $testData->filter(function ($item) {
-            return $item->status === 'Tercapai' && $item->predicted_status === 'Tercapai';
-        })->count();
+                return $item->status === 'Tercapai' && $item->predicted_status === 'Tercapai';
+            })->count();
 
         $FP = $testData->filter(function ($item) {
-            return $item->status === 'Tidak Tercapai' && $item->predicted_status === 'Tercapai';
-        })->count();
+                return $item->status === 'Tidak Tercapai' && $item->predicted_status === 'Tercapai';
+            })->count();
 
         $FN = $testData->filter(function ($item) {
-            return $item->status === 'Tercapai' && $item->predicted_status === 'Tidak Tercapai';
-        })->count();
+                return $item->status === 'Tercapai' && $item->predicted_status === 'Tidak Tercapai';
+            })->count();
 
-        // **Hitung Precision dan Recall**
         $precision = ($TP + $FP) > 0 ? ($TP / ($TP + $FP)) * 100 : 0;
         $recall = ($TP + $FN) > 0 ? ($TP / ($TP + $FN)) * 100 : 0;
 
         // **Hitung probabilitas status prediksi**
         $probStatus = [
-            'Tepat' => $testData->filter(function ($item) {
-                return $item->predicted_status === 'Tercapai';
-            })->count() * 100 / max(1, $totalTestData),
-            'Terlambat' => $testData->filter(function ($item) {
-                return $item->predicted_status === 'Tidak Tercapai';
-            })->count() * 100 / max(1, $totalTestData),
+            'Tepat' => $testData->where('predicted_status', 'Tercapai')->count() * 100 / max(1, $totalTestData),
+            'Terlambat' => $testData->where('predicted_status', 'Tidak Tercapai')->count() * 100 / max(1, $totalTestData),
+        ];
+
+        $probRegion = [
+            'Dalam Provinsi' => $probRegion['Dalam Provinsi'] ?? 0,
+            'Luar Provinsi' => $probRegion['Luar Provinsi'] ?? 0,
         ];
 
         // **Probabilitas berdasarkan jenis kelamin**
@@ -100,73 +87,7 @@ class TestDataController extends Controller
             'Perempuan' => $probGender['Perempuan'] ?? 0,
         ];
 
-
-        // Hitung total jumlah "Tercapai" dan "Tidak Tercapai" untuk masing-masing kategori
-        $totalTercapai = $testData->where('status', 'Tercapai')->count();
-        $totalTidakTercapai = $testData->where('status', 'Tidak Tercapai')->count();
-
-        $probKelamin = [
-            'Tercapai' => [
-                'Laki-laki' => [
-                    'probability' => $totalTercapai > 0 ? $testData->where('status', 'Tercapai')->where('jenis_kelamin', 'Laki-laki')->count() / $totalTercapai : 0,
-                    'count' => $testData->where('status', 'Tercapai')->where('jenis_kelamin', 'Laki-laki')->count(),
-                ],
-                'Perempuan' => [
-                    'probability' => $totalTercapai > 0 ? $testData->where('status', 'Tercapai')->where('jenis_kelamin', 'Perempuan')->count() / $totalTercapai : 0,
-                    'count' => $testData->where('status', 'Tercapai')->where('jenis_kelamin', 'Perempuan')->count(),
-                ],
-            ],
-            'Tidak Tercapai' => [
-                'Laki-laki' => [
-                    'probability' => $totalTidakTercapai > 0 ? $testData->where('status', 'Tidak Tercapai')->where('jenis_kelamin', 'Laki-laki')->count() / $totalTidakTercapai : 0,
-                    'count' => $testData->where('status', 'Tidak Tercapai')->where('jenis_kelamin', 'Laki-laki')->count(),
-                ],
-                'Perempuan' => [
-                    'probability' => $totalTidakTercapai > 0 ? $testData->where('status', 'Tidak Tercapai')->where('jenis_kelamin', 'Perempuan')->count() / $totalTidakTercapai : 0,
-                    'count' => $testData->where('status', 'Tidak Tercapai')->where('jenis_kelamin', 'Perempuan')->count(),
-                ],
-            ],
-        ];
-
-
-        // **Probabilitas berdasarkan asal daerah**
-        $probRegion = $testData->groupBy('asal_daerah')->map(function ($group) use ($totalTestData) {
-            return [
-                'probability' => ($group->count() * 100) / max(1, $totalTestData),
-                'count' => $group->count()
-            ];
-        })->toArray();
-
-
-        $probRegion = [
-            'Dalam Provinsi' => $probRegion['Dalam Provinsi'] ?? 0,
-            'Luar Provinsi' => $probRegion['Luar Provinsi'] ?? 0,
-        ];
-
-        $probProvinsi = [
-            'Tercapai' => [
-                'Dalam Provinsi' => [
-                    'probability' => $totalTercapai > 0 ? $testData->where('status', 'Tercapai')->where('asal_daerah', 'Dalam Provinsi')->count() / $totalTercapai : 0,
-                    'count' => $testData->where('status', 'Tercapai')->where('asal_daerah', 'Dalam Provinsi')->count(),
-                ],
-                'Luar Provinsi' => [
-                    'probability' => $totalTercapai > 0 ? $testData->where('status', 'Tercapai')->where('asal_daerah', 'Luar Provinsi')->count() / $totalTercapai : 0,
-                    'count' => $testData->where('status', 'Tercapai')->where('asal_daerah', 'Luar Provinsi')->count(),
-                ],
-            ],
-            'Tidak Tercapai' => [
-                'Dalam Provinsi' => [
-                    'probability' => $totalTidakTercapai > 0 ? $testData->where('status', 'Tidak Tercapai')->where('asal_daerah', 'Dalam Provinsi')->count() / $totalTidakTercapai : 0,
-                    'count' => $testData->where('status', 'Tidak Tercapai')->where('asal_daerah', 'Dalam Provinsi')->count(),
-                ],
-                'Luar Provinsi' => [
-                    'probability' => $totalTidakTercapai > 0 ? $testData->where('status', 'Tidak Tercapai')->where('asal_daerah', 'Luar Provinsi')->count() / $totalTidakTercapai : 0,
-                    'count' => $testData->where('status', 'Tidak Tercapai')->where('asal_daerah', 'Luar Provinsi')->count(),
-                ],
-            ],
-        ];
-
-        // **Hitung peluang tepat waktu berdasarkan jenis kelamin**
+                // **Hitung peluang tepat waktu berdasarkan jenis kelamin**
         $peluangGender = $testData->groupBy('jenis_kelamin')->map(function ($group) {
             $total = $group->count();
             $tercapai = $group->filter(function ($item) {
@@ -192,7 +113,7 @@ class TestDataController extends Controller
             ];
         })->toArray();
 
-        $probNumerik = [
+            $probNumerik = [
             'alquran' => [
                 'Tercapai' => $this->calculateMeanStdDev('alquran', 'Tercapai', $testData),
                 'Tidak Tercapai' => $this->calculateMeanStdDev('alquran', 'Tidak Tercapai', $testData),
@@ -207,9 +128,56 @@ class TestDataController extends Controller
             ],
         ];
 
+                $totalTercapai = $testData->where('status', 'Tercapai')->count();
+        $totalTidakTercapai = $testData->where('status', 'Tidak Tercapai')->count();
 
+                $probKelamin = [
+            'Tercapai' => [
+                'Laki-laki' => [
+                    'probability' => $totalTercapai > 0 ? $testData->where('status', 'Tercapai')->where('jenis_kelamin', 'Laki-laki')->count() / $totalTercapai : 0,
+                    'count' => $testData->where('status', 'Tercapai')->where('jenis_kelamin', 'Laki-laki')->count(),
+                ],
+                'Perempuan' => [
+                    'probability' => $totalTercapai > 0 ? $testData->where('status', 'Tercapai')->where('jenis_kelamin', 'Perempuan')->count() / $totalTercapai : 0,
+                    'count' => $testData->where('status', 'Tercapai')->where('jenis_kelamin', 'Perempuan')->count(),
+                ],
+            ],
+            'Tidak Tercapai' => [
+                'Laki-laki' => [
+                    'probability' => $totalTidakTercapai > 0 ? $testData->where('status', 'Tidak Tercapai')->where('jenis_kelamin', 'Laki-laki')->count() / $totalTidakTercapai : 0,
+                    'count' => $testData->where('status', 'Tidak Tercapai')->where('jenis_kelamin', 'Laki-laki')->count(),
+                ],
+                'Perempuan' => [
+                    'probability' => $totalTidakTercapai > 0 ? $testData->where('status', 'Tidak Tercapai')->where('jenis_kelamin', 'Perempuan')->count() / $totalTidakTercapai : 0,
+                    'count' => $testData->where('status', 'Tidak Tercapai')->where('jenis_kelamin', 'Perempuan')->count(),
+                ],
+            ],
+        ];
 
+                $probProvinsi = [
+            'Tercapai' => [
+                'Dalam Provinsi' => [
+                    'probability' => $totalTercapai > 0 ? $testData->where('status', 'Tercapai')->where('asal_daerah', 'Dalam Provinsi')->count() / $totalTercapai : 0,
+                    'count' => $testData->where('status', 'Tercapai')->where('asal_daerah', 'Dalam Provinsi')->count(),
+                ],
+                'Luar Provinsi' => [
+                    'probability' => $totalTercapai > 0 ? $testData->where('status', 'Tercapai')->where('asal_daerah', 'Luar Provinsi')->count() / $totalTercapai : 0,
+                    'count' => $testData->where('status', 'Tercapai')->where('asal_daerah', 'Luar Provinsi')->count(),
+                ],
+            ],
+            'Tidak Tercapai' => [
+                'Dalam Provinsi' => [
+                    'probability' => $totalTidakTercapai > 0 ? $testData->where('status', 'Tidak Tercapai')->where('asal_daerah', 'Dalam Provinsi')->count() / $totalTidakTercapai : 0,
+                    'count' => $testData->where('status', 'Tidak Tercapai')->where('asal_daerah', 'Dalam Provinsi')->count(),
+                ],
+                'Luar Provinsi' => [
+                    'probability' => $totalTidakTercapai > 0 ? $testData->where('status', 'Tidak Tercapai')->where('asal_daerah', 'Luar Provinsi')->count() / $totalTidakTercapai : 0,
+                    'count' => $testData->where('status', 'Tidak Tercapai')->where('asal_daerah', 'Luar Provinsi')->count(),
+                ],
+            ],
+        ];
 
+        
         return view('pages.admin.test-data', compact(
             'testData',
             'totalTestData',
@@ -231,7 +199,9 @@ class TestDataController extends Controller
             'probProvinsi',
             'testLimit',
             'trainLimit',
-
+            'FP',
+            'TP',
+            'FN'
         ));
     }
 
@@ -241,55 +211,41 @@ class TestDataController extends Controller
 
         return view('pages.admin.class-result', compact('classifiedData'));
     }
-    private function classifyData(Request $request)
+
+    private function classifyData($trainData, $testData)
     {
-        $trainPercentage = $request->input('train_percentage', 80); // Default 80%
-        $testPercentage = 100 - $trainPercentage;
-        $totalTrainData = TrainData::count();
-        $trainLimit = round(($trainPercentage / 100) * $totalTrainData);
-        $testLimit = round(($testPercentage / 100) * $totalTrainData);
-
-        // Ambil data uji sesuai limit yang dihitung
-        $testData = TestData::limit($testLimit)->get();
-        $totalTestData = $testData->count();
-
-        if ($totalTestData == 0) {
-            return;
-        }
-
-        // Ambil data latih untuk model
-        $trainSamples = TrainData::limit($trainLimit)->get()->map(function ($item) {
+        // Ambil data latih dan pisahkan fitur dan label
+        $trainSamples = $trainData->map(function ($item) {
             return [$item->alquran, $item->alhadis]; // Fitur
         })->toArray();
 
-        $trainLabels = TrainData::limit($trainLimit)->pluck('status')->values()->toArray();
+        $trainLabels = $trainData->pluck('status')->values()->toArray(); // Label
 
-        // Ambil data uji
+        // Cek jika data latih kosong
+        if (empty($trainSamples) || empty($trainLabels)) {
+            session()->flash('error', 'Data Latih 0. Model tidak mempelajari pola apapun');
+            return;
+        }
+
+        // Ambil data uji dan pisahkan fitur
         $testSamples = $testData->map(function ($item) {
             return [$item->alquran, $item->alhadis]; // Fitur
         })->toArray();
 
-        if (count($trainSamples) == 0 || count($testSamples) == 0) {
-            return;
-        }
-
         // Jalankan Naive Bayes
         $classifier = new NaiveBayes();
-        $classifier->train($trainSamples, $trainLabels);
-        $predictedLabels = $classifier->predict($testSamples);
+        $classifier->train($trainSamples, $trainLabels); // Latih model dengan data latih
+        $predictedLabels = $classifier->predict($testSamples);  // Prediksi data uji
 
-        // Simpan hasil prediksi
+        // Simpan hasil prediksi ke dalam TestData
         foreach ($testData as $index => $data) {
             $data->predicted_status = $predictedLabels[$index] ?? 'Belum Diklasifikasi';
             $data->save();
         }
 
-        // ✅ Tambahkan debug log untuk memastikan prediksi disimpan
-        Log::info("DEBUG: Hasil Prediksi Naive Bayes", [
-            "Total Test Data" => count($testSamples),
-            "Predicted Labels" => $predictedLabels,
-        ]);
+        Log::info("DEBUG: Predicted Labels", ["PredictedLabels" => $predictedLabels]);
     }
+
 
 
     public function resetData()
